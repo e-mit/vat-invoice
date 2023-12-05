@@ -7,8 +7,7 @@ function addRow(items) {
 }
 
 function deleteRow(btn) {
-    let row = btn.parentNode.parentNode;
-    row.parentNode.removeChild(row);
+    btn.parentNode.parentNode.remove();
 }
 
 function submitForm() {
