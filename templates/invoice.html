@@ -9,7 +9,7 @@
   Invoice Number: {{ invoice_number }}<br>
   Invoice Date: {{ invoice_date }}<br>
   Currency: {{ currency_code }}<br>
-  {% if buyer_address_lines is not none %}
+  {% if buyer_address_lines | length != 0 %}
     <div class="customer-addresses">
       <div class="shipping-address">
         <p class="subtitle-bold to-uppercase">
