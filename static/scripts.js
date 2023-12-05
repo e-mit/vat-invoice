@@ -26,7 +26,7 @@ function submitForm() {
 
     const jsonData = JSON.stringify(formData);
     console.log(jsonData);
-    document.getElementById("json-data").value = jsonData;
+    document.getElementById("item-data").value = jsonData;
     document.getElementById("invoice-form").submit();
   }
 
