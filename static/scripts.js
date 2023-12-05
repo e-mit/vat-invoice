@@ -10,6 +10,13 @@ function deleteRow(btn) {
     btn.parentNode.parentNode.remove();
 }
 
+function deleteAllRows() {
+    let rows = Array.from(document.getElementById("item-table").children)
+    for (let i = 0; i < rows.length; i++) {
+        rows[i].remove();
+    }
+}
+
 function submitForm() {
     const table = document.getElementById("item-table");
     let formData = [];
@@ -41,4 +48,5 @@ function submitForm() {
     for (const element of document.querySelectorAll('[data-demo]')) {
         element.value = "";
     }
+    deleteAllRows();
   }
