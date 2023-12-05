@@ -27,15 +27,19 @@ function submitForm() {
     const jsonData = JSON.stringify(formData);
     console.log(jsonData);
     document.getElementById("json-data").value = jsonData;
-
-    const form = document.getElementById("invoice-form")
-    form.submit();
+    document.getElementById("invoice-form").submit();
   }
 
-  function demoForm(demoData) {
-    console.log(demoData);
+  function demoForm() {
     clearForm();
+    for (const element of document.querySelectorAll('[data-demo]')) {
+        element.value = element.dataset.demo;
+    }
+    // TODO: add item data
   }
 
   function clearForm() {
+    for (const element of document.querySelectorAll('[data-demo]')) {
+        element.value = "";
+    }
   }

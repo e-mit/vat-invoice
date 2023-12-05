@@ -4,7 +4,6 @@
   {{ super() }}
   <script src="{{ url_for('static', filename='scripts.js') }}"></script>
   <script>
-    const demoData = {{ demo_data | tojson }};
     const itemColumns = {{ item_columns | tojson }};
   </script>
 {% endblock head %}
@@ -24,24 +23,24 @@
   
   <form action="" method="post" id="invoice-form">
     <label for="invoiceNumber">Invoice Number:</label>
-    <input type="text" id="invoiceNumber" name="invoice-number" required>
+    <input type="text" id="invoiceNumber" name="invoice-number" data-demo="P64728" required>
     <br>
     <label for="invoice-date">Invoice Date:</label>
-    <input type="date" id="invoice-date" name="invoice-date" required>
+    <input type="date" id="invoice-date" name="invoice-date" data-demo="2023-05-02" required>
     <br>
     <label for="currency-code">Currency Code:</label>
-    <input type="text" id="currency-code" name="currency-code" value="GBP" required>
+    <input type="text" id="currency-code" name="currency-code" data-demo="GBP" required>
     <br>
     <label for="seller-name">Seller name:</label>
-    <input type="text" id="seller-name" name="seller-name" required>
+    <input type="text" id="seller-name" name="seller-name" data-demo="The Seller Co." required>
     <br>
     <label for="seller-vat-number">Seller VAT number:</label>
-    <input type="text" id="seller-vat-number" name="seller-vat-number" required>
+    <input type="text" id="seller-vat-number" name="seller-vat-number" data-demo="XY123456" required>
     <br>
     <label for="seller-address">Seller Address:</label>
-    <textarea id="seller-address" name="seller-address" rows="4" required></textarea>
+    <textarea id="seller-address" name="seller-address" rows="4" data-demo="123 Example Road&#xa;London&#xa;EC1A 2AB" required></textarea>
     <br>
-    <input type="hidden" name="json-data" id="json-data">
+    <input type="hidden" name="json-data" id="json-data" data-demo="">
   </form>
 
   <table>
@@ -60,9 +59,9 @@
   <button type="button" onclick="addRow(itemColumns)">Add item line</button>
   <br>
   <label for="buyer-address">Buyer name and address (optional):</label>
-  <textarea name="buyer-address" id="buyer-address" form="invoice-form" rows="4"></textarea>
+  <textarea name="buyer-address" id="buyer-address" form="invoice-form" rows="4" data-demo=""></textarea>
   <br>
-  <button type="button" onclick="demoForm(demoData)">Use demo data</button>
+  <button type="button" onclick="demoForm()">Use demo data</button>
   <br>
   <button type="button" onclick="clearForm()">Clear form</button>
   <br>

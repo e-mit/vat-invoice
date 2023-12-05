@@ -7,7 +7,6 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 menu_items = ["home", "foo"]
 
-demo_data = {"hi": 2, "foo": "bar"}
 item_columns = {'description': "Item description",
                 'price': "Unit price ex. VAT", 'rate': "VAT Rate (%)",
                 'quantity': "Quantity"}
@@ -30,8 +29,7 @@ def page_not_found(error):
 @app.get("/foo")
 def foo():
     return render_template("form.html", title="VAT invoice generator",
-                           menu_items=menu_items, demo_data=demo_data,
-                           item_columns=item_columns)
+                           menu_items=menu_items, item_columns=item_columns)
 
 
 @app.post("/foo")
@@ -43,8 +41,7 @@ def foo_post():
     except Exception:
         app.logger.error("Could not convert form data")
         x = "no data found"
-    html_content = x
-    #(docname, html_content) = credit_note.get_invoice()
+    print(x)
     return credit_note.get_invoice()
 
 
