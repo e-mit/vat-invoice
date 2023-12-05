@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, flash
-from markupsafe import escape
 import json
 
 app = Flask(__name__)

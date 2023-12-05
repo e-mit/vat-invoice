@@ -29,24 +29,21 @@ function submitForm() {
         }
         formData.push(rowData);
     }
-
-    const jsonData = JSON.stringify(formData);
-    console.log(jsonData);
-    document.getElementById("item-data").value = jsonData;
+    document.getElementById("item-data").value = JSON.stringify(formData);
     document.getElementById("invoice-form").submit();
-  }
+}
 
-  function demoForm(items) {
+function demoForm(items) {
     clearForm();
     addRow(items);
     for (const element of document.querySelectorAll('[data-demo]')) {
         element.value = element.dataset.demo;
     }
-  }
+}
 
-  function clearForm() {
+function clearForm() {
     for (const element of document.querySelectorAll('[data-demo]')) {
         element.value = "";
     }
     deleteAllRows();
-  }
+}
