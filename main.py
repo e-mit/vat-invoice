@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, flash
 from markupsafe import escape
-import credit_note
 import json
 
 app = Flask(__name__)
@@ -8,9 +7,10 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 menu_items = ["home", "foo"]
 
-item_columns = {'description': "Item description",
-                'price': "Unit price ex. VAT", 'rate': "VAT Rate (%)",
-                'quantity': "Quantity"}
+item_columns = {'names': ['description', 'price', 'percent', 'quantity'],
+                'titles': ["Item description", "Unit price ex. VAT",
+                           "VAT Rate (%)", "Quantity"],
+                'demos': ['Golden Widget', '100.00', '20', '1']}
 
 #  TODO: use formtarget="_blank" to open the invoice in a new tab
 
@@ -54,7 +54,7 @@ def foo_post():
         t['description'] = item['description']
         t['unit_price'] = float(item['price'])
         t['qty'] = int(item['quantity'])
-        t['vat_rate'] = float(item['rate'])
+        t['vat_rate'] = float(item['percent'])/100.0
         t['total_ex_vat'] = t['unit_price'] * t['qty']
         data['invoice_items'].append(t)
         data['total_ex_vat'] += t['total_ex_vat']

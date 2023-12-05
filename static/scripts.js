@@ -1,7 +1,7 @@
 function addRow(items) {
     let newRow = document.getElementById("item-table").insertRow();
-    for (const key in items) {
-        newRow.insertCell().innerHTML = `<input type="text" name="${key}">`;
+    for (let i = 0; i < items.names.length; i++) {
+        newRow.insertCell().innerHTML = `<input type="text" name="${items.names[i]}" data-demo="${items.demos[i]}">`;
     }
     newRow.insertCell().innerHTML = '<button type="button" onclick="deleteRow(this)">Delete</button>';
 }
@@ -36,12 +36,12 @@ function submitForm() {
     document.getElementById("invoice-form").submit();
   }
 
-  function demoForm() {
+  function demoForm(items) {
     clearForm();
+    addRow(items);
     for (const element of document.querySelectorAll('[data-demo]')) {
         element.value = element.dataset.demo;
     }
-    // TODO: add item data
   }
 
   function clearForm() {

@@ -46,7 +46,7 @@
   <table>
     <thead>
       <tr>
-        {% for description in item_columns.values() %}
+        {% for description in item_columns.titles %}
         <th>{{ description }}</th>
         {% endfor %}
         <th></th>
@@ -61,7 +61,7 @@
   <label for="buyer-address">Buyer name and address (optional):</label>
   <textarea name="buyer-address" id="buyer-address" form="invoice-form" rows="4" data-demo="A. B. Tester&#xa;High Street&#xa;Birmingham"></textarea>
   <br>
-  <button type="button" onclick="demoForm()">Use demo data</button>
+  <button type="button" onclick="demoForm(itemColumns)">Use demo data</button>
   <br>
   <button type="button" onclick="clearForm()">Clear form</button>
   <br>
