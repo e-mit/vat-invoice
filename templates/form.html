@@ -1,10 +1,17 @@
 {% extends "base.html" %}
 
+{%- set table_items =
+    {'names': ['description', 'price', 'percent', 'quantity'],
+     'titles': ["Item description", "Unit price ex. VAT",
+                "VAT Rate (%)", "Quantity"],
+     'demos': ['Golden Widget', '100.00', '20', '1']}
+-%}
+
 {% block head %}
   {{ super() }}
   <script src="{{ url_for('static', filename='scripts.js') }}"></script>
   <script>
-    const itemColumns = {{ item_columns | tojson }};
+    const tableItems = {{ table_items | tojson }};
   </script>
 {% endblock head %}
 
@@ -46,7 +53,7 @@
   <table>
     <thead>
       <tr>
-        {% for description in item_columns.titles %}
+        {% for description in table_items.titles %}
         <th>{{ description }}</th>
         {% endfor %}
         <th></th>
@@ -56,12 +63,12 @@
     </tbody>
   </table>
 
-  <button type="button" onclick="addRow(itemColumns)">Add item line</button>
+  <button type="button" onclick="addRow(tableItems)">Add item line</button>
   <br>
   <label for="buyer-address">Buyer name and address (optional):</label>
-  <textarea name="buyer-address" id="buyer-address" form="invoice-form" rows="4" data-demo="A. B. Tester&#xa;High Street&#xa;Birmingham"></textarea>
+  <textarea name="buyer-address" id="buyer-address" form="invoice-form" rows="4" data-demo="A. B. Tester&#xa;The High Street&#xa;Birmingham"></textarea>
   <br>
-  <button type="button" onclick="demoForm(itemColumns)">Use demo data</button>
+  <button type="button" onclick="demoForm(tableItems)">Use demo data</button>
   <br>
   <button type="button" onclick="clearForm()">Clear form</button>
   <br>

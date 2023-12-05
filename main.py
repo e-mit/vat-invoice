@@ -4,11 +4,6 @@ import json
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-item_columns = {'names': ['description', 'price', 'percent', 'quantity'],
-                'titles': ["Item description", "Unit price ex. VAT",
-                           "VAT Rate (%)", "Quantity"],
-                'demos': ['Golden Widget', '100.00', '20', '1']}
-
 #  TODO: use formtarget="_blank" to open the invoice in a new tab
 
 @app.errorhandler(404)
@@ -17,8 +12,7 @@ def page_not_found(error):
 
 @app.get("/")
 def index():
-    return render_template("form.html", title="VAT invoice generator",
-                           item_columns=item_columns)
+    return render_template("form.html", title="VAT invoice generator")
 
 @app.post("/")
 def index_post():
