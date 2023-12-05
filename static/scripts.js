@@ -18,15 +18,6 @@ function submitForm() {
     for (var i = 0; i < table.rows.length; i++) {
       var row = table.rows[i];
 
-      /*
-      rowData = {};
-      for (const cell in row.cells) {
-        k = cell.getElementsByTagName("input")[0].name;
-        rowData[k] = cell.getElementsByTagName("input")[0].value;
-      }
-      formData.push(rowData);
-      */
-
       formData.push({
         description: row.cells[0].getElementsByTagName("input")[0].value,
         price: row.cells[1].getElementsByTagName("input")[0].value,
