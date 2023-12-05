@@ -12,23 +12,23 @@ function deleteRow(btn) {
 }
 
 function submitForm() {
-    let table = document.getElementById("item-table");
+    const table = document.getElementById("item-table");
     let formData = [];
     for (let i = 0; i < table.rows.length; i++) {
-        let row = table.rows[i];
+        const row = table.rows[i];
         let rowData = {};
         for (let j = 0; j < (row.cells.length - 1); j++) {
-            let k = row.cells[j].getElementsByTagName("input")[0].name;
+            const k = row.cells[j].getElementsByTagName("input")[0].name;
             rowData[k] = row.cells[j].getElementsByTagName("input")[0].value;
         }
         formData.push(rowData);
     }
 
-    let jsonData = JSON.stringify(formData);
+    const jsonData = JSON.stringify(formData);
     console.log(jsonData);
     document.getElementById("json-data").value = jsonData;
 
-    let form = document.getElementById("invoice-form")
+    const form = document.getElementById("invoice-form")
     form.submit();
   }
 
