@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div class="wrapper">
+  <p class="shop-title" style="text-align: center;">
+  INVOICE
+  </p>
+  Invoice Number: {{ invoice_number }}<br>
+  Invoice Date: {{ invoice_date }}<br>
+  Currency: {{ currency_code }}<br>
+  {% if buyer_address_lines is not none %}
+    <div class="customer-addresses">
+      <div class="shipping-address">
+        <p class="subtitle-bold to-uppercase">
+          Bill/Deliver to
+        </p>
+        <p class="address-detail">
+          {% for line in buyer_address_lines %}
+              {{ line }}
+              <br>
+          {% endfor %}
+        </p>
+      </div>  
+    </div>
+  {% endif %}
+  <hr>
+  <div class="order-container">
+    <div class="order-container-header">
+      <div class="order-container-header-left-content">
+        <p class="subtitle-bold to-uppercase">
+          Items
+        </p>
+      </div>
+      <div class="order-container-header-right-content">
+        <p class="subtitle-bold to-uppercase">
+          Price Ex.&nbsp;VAT
+        </p>
+      </div>
+    </div>
+
+    {% for item in invoice_items %}
+      <div class="flex-line-item">
+        <div class="flex-line-item-description">
+          <p>
+            <span class="line-item-description-line">
+              <strong>{{ item.description }}</strong>
+            </span>
+            Unit price ex.&nbsp;VAT:&nbsp;{{ item.unit_price }}<br>
+            VAT rate: {{ item.vat_rate }}<br>
+            Quantity: {{ item.qty }}
+          </p>
+        </div>
+        <div class="flex-line-item-quantity">
+          <p class="text-align-right">
+            {{ item.total_ex_vat }}
+          </p>
+        </div>
+      </div>
+    {% endfor %}
+        
+  </div>
+  <hr>
+  <div class="order-container">
+      <div class="flex-line-item">
+        <div class="flex-line-item-description">
+          <p>
+            <span class="line-item-description-line">
+              <span>Subtotal ex. VAT</span>
+            </span>
+          </p>
+        </div>
+        <div class="flex-line-item-quantity">
+          <p class="text-align-right">
+            {{ total_ex_vat }}
+          </p>
+        </div>
+      </div>
+      
+      <div class="flex-line-item">
+        <div class="flex-line-item-description">
+          <p>
+            <span class="line-item-description-line">
+              <span>VAT</span>
+            </span>
+          </p>
+        </div>
+        <div class="flex-line-item-quantity">
+          <p class="text-align-right">
+            {{ total_vat }}
+          </p>
+        </div>
+      </div>
+
+</div>
+<hr>
+  <div class="order-container">
+
+      <div class="flex-line-item">
+        <div class="flex-line-item-description">
+          <p>
+            <span class="line-item-description-line">
+              <strong>TOTAL</strong>
+            </span>
+          </p>
+        </div>
+        <div class="flex-line-item-quantity">
+          <p class="text-align-right">
+            {{ currency_code }}&nbsp;{{ total }}
+          </p>
+        </div>
+      </div>
+
+</div>
+<hr>
+
+  <div class="footer">
+    <p>
+      <strong>
+      {{ seller_name }}
+      </strong>
+      <br>
+      {{ seller_address }}
+      <br>
+      VAT number: {{ seller_vat_number }}
+    </p>
+  </div>
+</div>
+<style type="text/css">
+  body {
+    font-size: 14px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .wrapper {
+    width: 831px;
+    margin: auto;
+    padding: 4em;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 250;
+  }
+
+  .header {
+    width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    align-items: top;
+  }
+
+  .header p {
+    margin: 0;
+  }
+
+  .shop-title {
+    -webkit-box-flex: 6;
+    -webkit-flex: 6;
+    flex: 6;
+    font-size: 1.5em;
+  }
+
+  .order-title {
+    -webkit-box-flex: 4;
+    -webkit-flex: 4;
+    flex: 4;
+  }
+
+  .customer-addresses {
+    width: 100%;
+    display: inline-block;
+    margin: 2em 0;
+  }
+
+  .address-detail {
+    margin: 0.7em 0 0;
+    line-height: 1.5;
+  }
+
+  .subtitle-bold {
+    font-weight: bold;
+    margin: 0;
+    font-size: 0.85em;
+  }
+
+  .to-uppercase {
+    text-transform: uppercase;
+  }
+
+  .text-align-right {
+    text-align: right;
+  }
+  
+  .text-align-left {
+    text-align: left;
+  }
+
+  .shipping-address {
+    float: left;
+    min-width: 18em;
+    max-width: 50%;
+  }
+
+  .billing-address {
+    padding-left: 20em;
+    min-width: 18em;
+  }
+
+  .order-container {
+    padding: 0 0.7em;
+  }
+
+  .order-container-header {
+    display: inline-block;
+    width: 100%;
+    margin-top: 1.4em;
+  }
+
+  .order-container-header-left-content {
+    float: left;
+  }
+
+  .order-container-header-right-content {
+    float: right;
+  }
+
+  .flex-line-item {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 1.4em 0;
+    page-break-inside: avoid;
+  }
+
+  .flex-line-item-description {
+    -webkit-box-flex: 7;
+    -webkit-flex: 7;
+    flex: 7;
+  }
+
+  .line-item-description-line {
+    display: block;
+  }
+
+  .flex-line-item-description p {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .flex-line-item-quantity {
+    -webkit-box-flex: 3;
+    -webkit-flex: 3;
+    flex: 3;
+  }
+
+  .subdued-separator {
+    height: 0.07em;
+    border: none;
+    color: lightgray;
+    background-color: lightgray;
+    margin: 0;
+  }
+
+  .missing-line-items-text {
+    margin: 1.4em 0;
+    padding: 0 0.7em;
+  }
+
+  .notes {
+    margin-top: 2em;
+  }
+
+  .notes p {
+    margin-bottom: 0;
+  }
+
+  .notes .notes-details {
+    margin-top: 0.7em;
+  }
+
+  .footer {
+    margin-top: 2em;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .footer p {
+    margin: 0;
+    margin-bottom: 1.4em;
+  }
+
+  hr {
+    height: 0.14em;
+    border: none;
+    color: black;
+    background-color: black;
+    margin: 0;
+  }
+
+  .aspect-ratio {
+    position: relative;
+    display: block;
+    background: #fafbfc;
+    padding: 0;
+  }
+
+  .aspect-ratio::before {
+    z-index: 1;
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 1px solid rgba(195,207,216,0.3);
+  }
+
+  .aspect-ratio--square {
+    width: 100%;
+    padding-bottom: 100%;
+  }
+
+  .aspect-ratio__content {
+    position: absolute;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+  }
+</style>
+
+<script>
+  //window.print();
+</script>
+
+</body>
+</html>

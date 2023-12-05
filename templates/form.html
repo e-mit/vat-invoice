@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block head %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+  <script>
+    const demoData = {{ demo_data | tojson }};
+    const itemColumns = {{ item_columns | tojson }};
+  </script>
+{% endblock head %}
+
+{% block content %}
+  {{ super() }}
+
+  <details>
+    <summary>How to use</summary>
+    <ol>
+      <li>Fill out the form: all fields are required except for the buyer's details.
+          Alternatively, populate with demo data for testing.</li>
+      <li>Click the 'generate' button to create the invoice. It will open in a new tab or window.</li>
+      <li>Print the invoice to paper or PDF. Choose the 'fit to page width' option in the print dialog.</li>
+    </ol>
+  </details>
+  
+  <form action="" method="post" id="invoice-form">
+    <label for="invoiceNumber">Invoice Number:</label>
+    <input type="text" id="invoiceNumber" name="invoice-number" required>
+    <br>
+    <label for="invoice-date">Invoice Date:</label>
+    <input type="date" id="invoice-date" name="invoice-date" required>
+    <br>
+    <label for="currency-code">Currency Code:</label>
+    <input type="text" id="currency-code" name="currency-code" value="GBP" required>
+    <br>
+    <label for="seller-name">Seller name:</label>
+    <input type="text" id="seller-name" name="seller-name" required>
+    <br>
+    <label for="seller-vat-number">Seller VAT number:</label>
+    <input type="text" id="seller-vat-number" name="seller-vat-number" required>
+    <br>
+    <label for="seller-address">Seller Address:</label>
+    <textarea id="seller-address" name="seller-address" rows="4" required></textarea>
+    <br>
+    <input type="hidden" name="json-data" id="json-data">
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        {% for description in item_columns.values() %}
+        <th>{{ description }}</th>
+        {% endfor %}
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="item-table">
+    </tbody>
+  </table>
+
+  <button type="button" onclick="addRow(itemColumns)">Add item line</button>
+  <br>
+  <label for="buyer-address">Buyer name and address (optional):</label>
+  <textarea name="buyer-address" id="buyer-address" form="invoice-form" rows="4"></textarea>
+  <br>
+  <button type="button" onclick="demoForm(demoData)">Use demo data</button>
+  <br>
+  <button type="button" onclick="clearForm()">Clear form</button>
+  <br>
+  <button type="button" onclick="submitForm()">Generate</button>
+{% endblock content %}
+
+{% block footer %}
+  <a href="https://github.com/e-mit/vat-invoice">View the source code on GitHub</a>
+  <br><br>
+  Please note: this website is provided for educational purposes only.
+  <br>
+  The generated invoices may not comply with applicable law.
+  <br>
+  {{ super() }}
+{% endblock footer %}
