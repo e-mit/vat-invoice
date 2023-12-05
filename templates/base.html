@@ -10,10 +10,6 @@
 </head>
 
 <body>
-  <header>
-    {% include "_navigation.html" %}
-  </header>
-
   {% with messages = get_flashed_messages() %}
     {% if messages %}
         <ul class=flashes>
@@ -27,10 +23,12 @@
   {% block content %}
     <h1>{{ title }}</h1>
   {% endblock content %}
+
   <footer>
     {% block footer %}
     <p>&copy; 2023</p>
     {% endblock footer %}
   </footer>
+  
 </body>
 </html>
