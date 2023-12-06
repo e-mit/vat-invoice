@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {%- set table_items =
-    {'names': ['description', 'price', 'percent', 'quantity'],
+    {'names': ['description', 'price', 'quantity'],
      'titles': ["Item description", "Unit price ex. VAT",
-                "VAT Rate (%)", "Quantity"],
-     'demos': ['Golden Widget', '100.00', '20', '1']}
+                "Quantity"],
+     'demos': ['Golden Widget', '100.00', '1']}
 -%}
 
 {% block head %}
@@ -28,26 +28,31 @@
     </ol>
   </details>
   
-  <form action="" method="post" id="invoice-form">
+  <form action="" method="post" id="invoice_form">
     <label for="invoiceNumber">Invoice Number:</label>
-    <input type="text" id="invoiceNumber" name="invoice-number" data-demo="P64728" required>
+    <input type="text" id="invoiceNumber" name="invoice_number" data-demo="P64728">
     <br>
-    <label for="invoice-date">Invoice Date:</label>
-    <input type="date" id="invoice-date" name="invoice-date" data-demo="2023-05-02" required>
+    <label for="invoice_date">Invoice Date:</label>
+    <input type="date" id="invoice_date" name="invoice_date" data-demo="2023-05-02">
     <br>
-    <label for="currency-code">Currency Code:</label>
-    <input type="text" id="currency-code" name="currency-code" data-demo="GBP" required>
+    <label for="currency_code">Currency Code:</label>
+    <input type="text" id="currency_code" name="currency_code" data-demo="GBP">
     <br>
-    <label for="seller-name">Seller name:</label>
-    <input type="text" id="seller-name" name="seller-name" data-demo="The Seller Co." required>
+    <label for="vat_percent">VAT rate (%):</label>
+    <input type="text" id="vat_percent" name="vat_percent" data-demo="20">
     <br>
-    <label for="seller-vat-number">Seller VAT number:</label>
-    <input type="text" id="seller-vat-number" name="seller-vat-number" data-demo="XY123456" required>
+    <label for="seller_name">Seller name:</label>
+    <input type="text" id="seller_name" name="seller_name" data-demo="The Seller Co.">
     <br>
-    <label for="seller-address">Seller Address:</label>
-    <textarea id="seller-address" name="seller-address" rows="4" data-demo="123 Example Road&#xa;London&#xa;EC1A 2AB" required></textarea>
+    <label for="seller_vat_number">Seller VAT number:</label>
+    <input type="text" id="seller_vat_number" name="seller_vat_number" data-demo="XY123456">
     <br>
-    <input type="hidden" name="item-data" id="item-data" data-demo="">
+    <label for="seller_address">Seller Address:</label>
+    <textarea id="seller_address" name="seller_address" rows="4"
+        data-demo="123 Example Road&#xa;London&#xa;EC1A 2AB">
+    </textarea>
+    <br>
+    <input type="hidden" name="item_data" id="item_data" data-demo="">
   </form>
 
   <table>
@@ -59,14 +64,15 @@
         <th></th>
       </tr>
     </thead>
-    <tbody id="item-table">
+    <tbody id="item_table">
     </tbody>
   </table>
 
   <button type="button" onclick="addRow(tableItems)">Add item line</button>
   <br>
-  <label for="buyer-address">Buyer name and address (optional):</label>
-  <textarea name="buyer-address" id="buyer-address" form="invoice-form" rows="4" data-demo="A. B. Tester&#xa;The High Street&#xa;Birmingham"></textarea>
+  <label for="buyer_address">Buyer name and address (optional):</label>
+  <textarea name="buyer_address" id="buyer_address" form="invoice_form" rows="4"
+      data-demo="A. B. Tester&#xa;The High Street&#xa;Birmingham"></textarea>
   <br>
   <button type="button" onclick="demoForm(tableItems)">Use demo data</button>
   <br>

@@ -47,7 +47,7 @@
               <strong>{{ item.description }}</strong>
             </span>
             Unit price ex.&nbsp;VAT:&nbsp;{{ item.unit_price }}<br>
-            VAT rate: {{ item.vat_rate }}<br>
+            VAT rate: {{ vat_percent }}%<br>
             Quantity: {{ item.qty }}
           </p>
         </div>
@@ -120,7 +120,7 @@
       {{ seller_name }}
       </strong>
       <br>
-      {{ seller_address }}
+      {{ seller_address_single_line }}
       <br>
       VAT number: {{ seller_vat_number }}
     </p>

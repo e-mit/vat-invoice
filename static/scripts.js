@@ -1,5 +1,5 @@
 function addRow(items) {
-    let newRow = document.getElementById("item-table").insertRow();
+    let newRow = document.getElementById("item_table").insertRow();
     for (let i = 0; i < items.names.length; i++) {
         newRow.insertCell().innerHTML = `<input type="text" name="${items.names[i]}" data-demo="${items.demos[i]}">`;
     }
@@ -11,14 +11,14 @@ function deleteRow(btn) {
 }
 
 function deleteAllRows() {
-    let rows = Array.from(document.getElementById("item-table").children)
+    let rows = Array.from(document.getElementById("item_table").children)
     for (let i = 0; i < rows.length; i++) {
         rows[i].remove();
     }
 }
 
 function submitForm() {
-    const table = document.getElementById("item-table");
+    const table = document.getElementById("item_table");
     let formData = [];
     for (let i = 0; i < table.rows.length; i++) {
         const row = table.rows[i];
@@ -29,8 +29,8 @@ function submitForm() {
         }
         formData.push(rowData);
     }
-    document.getElementById("item-data").value = JSON.stringify(formData);
-    document.getElementById("invoice-form").submit();
+    document.getElementById("item_data").value = JSON.stringify(formData);
+    document.getElementById("invoice_form").submit();
 }
 
 function demoForm(items) {
