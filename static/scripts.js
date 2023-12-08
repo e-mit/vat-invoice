@@ -1,49 +1,42 @@
-function addRow(items) {
+function addRow() {
+    const lastRow = Array.from(document.getElementById("item_table").getElementsByTagName("tr")).pop();
+    const cells = lastRow.getElementsByTagName("td");
     let newRow = document.getElementById("item_table").insertRow();
-    for (let i = 0; i < items.names.length; i++) {
-        newRow.insertCell().innerHTML = `<input type="text" name="${items.names[i]}" data-demo="${items.demos[i]}">`;
-    }
-    newRow.insertCell().innerHTML = '<button type="button" onclick="deleteRow(this)">Delete</button>';
-}
-
-function deleteRow(btn) {
-    btn.parentNode.parentNode.remove();
-}
-
-function deleteAllRows() {
-    let rows = Array.from(document.getElementById("item_table").children)
-    for (let i = 0; i < rows.length; i++) {
-        rows[i].remove();
-    }
-}
-
-function submitForm() {
-    const table = document.getElementById("item_table");
-    let formData = [];
-    for (let i = 0; i < table.rows.length; i++) {
-        const row = table.rows[i];
-        let rowData = {};
-        for (let j = 0; j < (row.cells.length - 1); j++) {
-            const k = row.cells[j].getElementsByTagName("input")[0].name;
-            rowData[k] = row.cells[j].getElementsByTagName("input")[0].value;
+    for (let i = 0; i < cells.length; i++) {
+        let newInput = cells[i].children[0].cloneNode();
+        const idParts = newInput.id.split('-');
+        if (idParts.length != 3) {
+            console.log("ERROR");
         }
-        formData.push(rowData);
+        newInput.value = ""
+        newInput.id = `${idParts[0]}-${Number(idParts[1])+1}-${idParts[2]}`
+        newInput.name = newInput.id;
+        newRow.insertCell().appendChild(newInput);
     }
-    document.getElementById("item_data").value = JSON.stringify(formData);
-    document.getElementById("invoice_form").submit();
 }
 
-function demoForm(items) {
-    clearForm();
-    addRow(items);
-    for (const element of document.querySelectorAll('[data-demo]')) {
-        element.value = element.dataset.demo;
+function countRows() {
+    let tableRows = document.getElementById("item_table").getElementsByTagName("tr");
+    return tableRows.length;
+}
+
+function removeRow() {
+    if (countRows() > 1) {
+        let tableRows = Array.from(document.getElementById("item_table").getElementsByTagName("tr"));
+        tableRows.pop().remove();
+    }
+}
+
+function removeAllAddedRows() {
+    while (countRows() > 1) {
+        removeRow();
     }
 }
 
 function clearForm() {
-    for (const element of document.querySelectorAll('[data-demo]')) {
-        element.value = "";
+    let elements = Array.from(document.getElementById("invoice_form").getElementsByClassName("clearable"));
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].value = "";
     }
-    deleteAllRows();
+    removeAllAddedRows();
 }
