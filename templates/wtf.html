@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block head %}
+  {{ super() }}
+{% endblock head %}
+
+{% block content %}
+  {{ super() }}
+
+  <form action="" method="post" id="invoice_form">
+    {% for field in form %}
+      <tr>
+          <th>{{ field.label }}</th>
+          <td>{{ field }}</td>
+      </tr>
+    {% endfor %}
+    <input type="submit" value="Generate">
+  </form>
+
+{% endblock content %}
+
+{% block footer %}
+  <a href="https://github.com/e-mit/vat-invoice">View the source code on GitHub</a>
+  <br><br>
+  Please note: this website is provided for educational purposes only.
+  <br>
+  The generated invoices may not comply with applicable law.
+  <br>
+  {{ super() }}
+{% endblock footer %}

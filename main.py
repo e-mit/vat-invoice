@@ -1,9 +1,25 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 import json
-from pydantic import BaseModel
 import secrets
 import decimal
 from decimal import Decimal
+from wtforms import Form, DateField, StringField, validators
+from wtforms import DecimalField, IntegerField, TextAreaField
+import datetime
+from typing import Any
+
+
+class BasicForm(Form):
+    name = StringField('Name', [validators.InputRequired()])
+    seller_address = TextAreaField('Seller address',
+                                   [validators.InputRequired()])
+    buyer_address = TextAreaField('Buyer address', [validators.Optional()])
+    date = DateField('Date', [validators.InputRequired()])
+    price = DecimalField('Price', [validators.InputRequired(),
+                                   validators.NumberRange(min=0)])
+    quantity = IntegerField('Quantity', [validators.InputRequired(),
+                                         validators.NumberRange(min=1)])
+
 
 app = Flask(__name__)
 app.secret_key = secrets.token_urlsafe(16)
@@ -11,6 +27,31 @@ app.secret_key = secrets.token_urlsafe(16)
 optional_form_data = ['buyer_address_lines']
 
 #  TODO: use formtarget="_blank" to open the invoice in a new tab
+
+demo_data: dict[str, Any] = {}
+demo_data['name'] = "The Seller Co."
+demo_data['date'] = datetime.datetime.now().date()
+demo_data['seller_address'] = "kjhjhjh"
+demo_data['buyer_address'] = "buyco"
+demo_data['price'] = Decimal("2.00")
+demo_data['quantity'] = 3
+
+
+@app.get("/wtf")
+def wtf():
+    form = BasicForm(request.form, **demo_data)
+    return render_template("wtf.html", form=form, title="WTForms Test")
+
+
+@app.post("/wtf")
+def wtf_post():
+    form = BasicForm(request.form)
+    form.validate()
+    print(form.data)
+    print(form.price.data)
+    print(form.errors)
+    print(form.form_errors)
+    return (render_template("base.html", title="Page not found"), 404)
 
 
 @app.errorhandler(404)
