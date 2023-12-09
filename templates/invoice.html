@@ -338,9 +338,11 @@
   }
 </style>
 
-<script>
-  //window.print();
-</script>
+{% if open_print_dialog %}
+  <script>
+    window.print();
+  </script>
+{% endif %}
 
 </body>
 </html>

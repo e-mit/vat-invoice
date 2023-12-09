@@ -8,7 +8,17 @@
 {% block content %}
   {{ super() }}
 
-  <form action="" method="post" id="invoice_form" onreset="removeAllAddedRows()">
+  <details>
+    <summary>How to use</summary>
+    <ol>
+      <li>Fill out the form: all fields are required except for the buyer's details.
+          Alternatively, populate with demo data for testing.</li>
+      <li>Click the 'Generate' button to create the invoice. It will open in a new tab or window.</li>
+      <li>Print the invoice to paper or PDF. Choose the 'fit to page width' option in the print dialog.</li>
+    </ol>
+  </details>
+
+  <form action="" method="post" id="invoice_form" onreset="removeAllAddedRows()" target="_blank">
     {% for field in form.info %}
       {{ field.label }} {{ field(class="clearable") }}
     {% endfor %}

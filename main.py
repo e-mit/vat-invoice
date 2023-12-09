@@ -7,6 +7,8 @@ from wtforms import DecimalField, IntegerField, TextAreaField, FormField
 import datetime
 from typing import Any
 
+open_print_dialog = False
+
 
 class InvoiceInfoForm(Form):
     invoice_number = StringField('Invoice number',
@@ -97,7 +99,8 @@ def index_post():
     if form.errors or form.form_errors:
         print("ERROR")
     invoice_data = process_data(form.data)
-    return render_template("invoice.html", **invoice_data)
+    return render_template("invoice.html", **invoice_data,
+                           open_print_dialog=open_print_dialog)
 
 
 @app.errorhandler(404)
