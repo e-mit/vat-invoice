@@ -34,3 +34,22 @@ table input, table label {
 textarea, input {
   width: 100%;
 }
+
+form {
+  display: grid;
+  grid-template-columns: 2rem 10rem 15rem 1fr;
+}
+
+form > label {
+  grid-column: 2 / 3;
+  display: flex;
+  align-items: center;
+}
+
+table {
+  grid-column: 1 / 5;
+}
+
+form textarea, form input {
+  margin: 0.25rem 0;
+}
