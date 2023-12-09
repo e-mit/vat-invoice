@@ -30,7 +30,8 @@ class InvoiceItemForm(Form):
     description = StringField('Description', [validators.InputRequired()])
     unit_price = DecimalField('Unit price ex. VAT',
                               [validators.InputRequired(),
-                               validators.NumberRange(min=0)])
+                               validators.NumberRange(min=0)],
+                              render_kw={"step": "0.01"})
     quantity = IntegerField('Quantity', [validators.InputRequired(),
                                          validators.NumberRange(min=1)])
 

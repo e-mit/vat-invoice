@@ -1,4 +1,26 @@
 body {
     font-family: "Helvetica", "Arial", sans-serif;
-    font-size: 1.3em;
+    font-size: 1.0rem;
+}
+
+ol {
+    padding-left: 1.5rem;
+}
+
+textarea {
+    font-size: 1em;
+    line-height: 1.2em;
+    height: 4.6em;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
