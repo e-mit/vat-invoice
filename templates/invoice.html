@@ -4,11 +4,14 @@
 
 <div class="wrapper">
   <p class="shop-title" style="text-align: center;">
-  INVOICE
+  <strong>INVOICE</strong>
   </p>
+  <div class="order-container">
+  <p class="invoice-detail">
   Invoice Number: {{ invoice_number }}<br>
   Invoice Date: {{ invoice_date }}<br>
   Currency: {{ currency_code }}<br>
+  </p>
   {% if buyer_address_lines | length != 0 %}
     <div class="customer-addresses">
       <div class="shipping-address">
@@ -24,6 +27,7 @@
       </div>  
     </div>
   {% endif %}
+  </div>
   <hr>
   <div class="order-container">
     <div class="order-container-header">
@@ -62,7 +66,7 @@
   </div>
   <hr>
   <div class="order-container">
-      <div class="flex-line-item">
+      <div class="flex-line-item-total">
         <div class="flex-line-item-description">
           <p>
             <span class="line-item-description-line">
@@ -77,7 +81,7 @@
         </div>
       </div>
       
-      <div class="flex-line-item">
+      <div class="flex-line-item-total">
         <div class="flex-line-item-description">
           <p>
             <span class="line-item-description-line">
@@ -96,7 +100,7 @@
 <hr>
   <div class="order-container">
 
-      <div class="flex-line-item">
+      <div class="flex-line-item-total">
         <div class="flex-line-item-description">
           <p>
             <span class="line-item-description-line">
@@ -106,7 +110,7 @@
         </div>
         <div class="flex-line-item-quantity">
           <p class="text-align-right">
-            {{ currency_code }}&nbsp;{{ total }}
+            <strong>{{ currency_code }}&nbsp;{{ total }}</strong>
           </p>
         </div>
       </div>
@@ -149,7 +153,7 @@
     display: -webkit-flex;
     display: flex;
     flex-direction: row;
-    align-items: top;
+    /*align-items: top;*/
   }
 
   .header p {
@@ -172,11 +176,16 @@
   .customer-addresses {
     width: 100%;
     display: inline-block;
-    margin: 2em 0;
+    margin: 1em 0;
   }
 
   .address-detail {
     margin: 0.7em 0 0;
+    line-height: 1.5;
+  }
+
+  .invoice-detail {
+    margin: 0.7em 0 1em 0;
     line-height: 1.5;
   }
 
@@ -234,6 +243,16 @@
     flex-direction: row;
     align-items: center;
     margin: 1.4em 0;
+    page-break-inside: avoid;
+  }
+
+  .flex-line-item-total {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0.2em 0;
     page-break-inside: avoid;
   }
 
