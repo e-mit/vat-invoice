@@ -55,8 +55,8 @@ demo_data['info']['invoice_number'] = "P98765"
 demo_data['info']['currency_code'] = "GBP"
 demo_data['info']['seller_vat_number'] = "XY12345678"
 demo_data['info']['vat_percent'] = 20
-demo_data['items'][0]['description'] = "Golden widget"
-demo_data['items'][0]['unit_price'] = Decimal("99.99")
+demo_data['items'][0]['description'] = "Widget"
+demo_data['items'][0]['unit_price'] = Decimal("9.99")
 demo_data['items'][0]['quantity'] = 2
 
 

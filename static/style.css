@@ -1,6 +1,7 @@
 body {
     font-family: "Helvetica", "Arial", sans-serif;
     font-size: 1.0rem;
+    grid-template-columns: 1fr min(45rem,95%) 1fr;
 }
 
 ol {
@@ -13,14 +14,23 @@ textarea {
     height: 4.6em;
 }
 
-/* Chrome, Safari, Edge, Opera */
+/* Remove number input arrows on Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/* Firefox */
+/* Remove number input arrows on Firefox */
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+table input, table label {
+  margin: 0;
+  text-align: center;
+}
+
+textarea, input {
+  width: 100%;
 }
