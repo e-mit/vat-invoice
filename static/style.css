@@ -37,7 +37,7 @@ textarea, input {
 
 form {
   display: grid;
-  grid-template-columns: 9rem 15rem 1fr;
+  grid-template-columns: 9rem min(15rem,45%) 1fr;
 }
 
 form > label {
@@ -55,17 +55,22 @@ form textarea, form input {
   margin: 0.25rem 0;
 }
 
-#button-box {
+#add-remove-button-box {
   display: grid;
-  grid-template-columns: 5rem 5rem 13.5rem 1fr;
+  grid-template-columns: 5rem 5rem 1fr;
   column-gap: 0.5rem;
 }
 
-#button-box > button, #button-box > input {
-  grid-column: 1 / span 3;
-}
-
-#button-box > .add-remove {
+#add-remove-button-box > button {
   grid-column: auto / span 1;
   font-size: 1.5rem;
+}
+
+#form-button-box {
+  display: grid;
+  grid-template-columns: min(24rem,100%) 1fr;
+}
+
+#form-button-box > button, #form-button-box > input {
+  grid-column: 1 / span 1;
 }

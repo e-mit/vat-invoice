@@ -40,9 +40,11 @@
       </tbody>
     </table>
   </form>
-  <div id="button-box">
-    <button type="button" onclick="addRow()" class="add-remove">+</button>
-    <button type="button" onclick="removeRow()" class="add-remove">−</button>
+  <div id="add-remove-button-box">
+    <button type="button" onclick="addRow()">+</button>
+    <button type="button" onclick="removeRow()">−</button>
+  </div>
+  <div id="form-button-box">
     <input type="reset" value="Use demo values" form="invoice_form">
     <button type="button" onclick="clearForm()">Clear form</button>
     <input type="submit" value="Generate" form="invoice_form">
