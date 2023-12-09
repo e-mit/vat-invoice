@@ -53,3 +53,19 @@ table {
 form textarea, form input {
   margin: 0.25rem 0;
 }
+
+#button-box {
+  display: grid;
+  grid-template-columns: 2rem 5rem 5rem 1fr;
+  column-gap: 0.5rem;
+}
+
+#button-box > button, #button-box > input {
+  grid-column: 2 / span 2;
+  line-height: 2rem;
+}
+
+#button-box > .add-remove {
+  grid-column: auto / span 1;
+  font-size: 2rem;
+}
