@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 import secrets
 import decimal
 from decimal import Decimal
 from wtforms import Form, DateField, StringField, validators, FieldList
 from wtforms import DecimalField, IntegerField, TextAreaField, FormField
-import datetime
+from wtforms.csrf.session import SessionCSRF
+from datetime import timedelta, datetime
 from typing import Any
 
 open_print_dialog = False
@@ -40,6 +41,16 @@ class InvoiceForm(Form):
     info = FormField(InvoiceInfoForm)
     items = FieldList(FormField(InvoiceItemForm), min_entries=1)
 
+    class Meta:
+        csrf = True
+        csrf_class = SessionCSRF
+        csrf_secret = secrets.token_bytes(32)
+        csrf_time_limit = timedelta(minutes=30)
+
+        @property
+        def csrf_context(self):
+            return session
+
 
 app = Flask(__name__)
 app.secret_key = secrets.token_urlsafe(16)
@@ -48,7 +59,7 @@ app.secret_key = secrets.token_urlsafe(16)
 
 demo_data: dict[str, Any] = {'info': {}, 'items': [{}]}
 demo_data['info']['seller_name'] = "The Seller Co."
-demo_data['info']['invoice_date'] = datetime.datetime.now().date()
+demo_data['info']['invoice_date'] = datetime.now().date()
 demo_data['info']['seller_address'] = "123 Example Road\nLondon\nEC1A 2AB"
 demo_data['info']['buyer_address'] = "A. Tester\nThe High Street\nBirmingham"
 demo_data['info']['invoice_number'] = "P98765"
@@ -96,17 +107,23 @@ def index_get():
 @app.post("/")
 def index_post():
     form = InvoiceForm(request.form)
-    form.validate()
-    if form.errors or form.form_errors:
-        print("ERROR")
-    invoice_data = process_data(form.data)
-    return render_template("invoice.html", **invoice_data,
-                           open_print_dialog=open_print_dialog)
+    if form.validate():
+        invoice_data = process_data(form.data)
+        return render_template("invoice.html", **invoice_data,
+                               open_print_dialog=open_print_dialog)
+    elif form.csrf_token.errors:
+        return (render_template("error.html", title="CSRF token error"), 419)
+    elif form.form_errors:
+        return (render_template("error.html", title="The form was inconsistent"), 422)
+    elif form.errors:
+        return (render_template("error.html", title="The form contained errors"), 422)
+    else:
+        return (render_template("error.html", title="Unknown error"), 500)
 
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return (render_template("base.html", title="Page not found"), 404)
+    return (render_template("error.html", title="Page not found"), 404)
 
 
 if __name__ == "__main__":
