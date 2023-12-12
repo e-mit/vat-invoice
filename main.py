@@ -14,22 +14,22 @@ open_in_new_tab = False
 
 class InvoiceInfoForm(Form):
     invoice_number = StringField('Invoice number',
-                                 [validators.InputRequired()])
+                                 [validators.DataRequired()])
     invoice_date = DateField('Invoice date', [validators.InputRequired()])
-    currency_code = StringField('Currency code', [validators.InputRequired()])
+    currency_code = StringField('Currency code', [validators.DataRequired()])
     vat_percent = DecimalField('VAT rate (%)', [validators.InputRequired(),
                                                 validators.NumberRange(min=0)])
-    seller_name = StringField('Seller name', [validators.InputRequired()])
+    seller_name = StringField('Seller name', [validators.DataRequired()])
     seller_vat_number = StringField('Seller VAT number',
-                                    [validators.InputRequired()])
+                                    [validators.DataRequired()])
     seller_address = TextAreaField('Seller address',
-                                   [validators.InputRequired()])
+                                   [validators.DataRequired()])
     buyer_address = TextAreaField('Buyer name and address (optional)',
                                   [validators.Optional()])
 
 
 class InvoiceItemForm(Form):
-    description = StringField('Description', [validators.InputRequired()])
+    description = StringField('Description', [validators.DataRequired()])
     unit_price = DecimalField('Unit price ex. VAT',
                               [validators.InputRequired(),
                                validators.NumberRange(min=0)],
