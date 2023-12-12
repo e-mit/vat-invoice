@@ -20,6 +20,7 @@ class StrippedStringField(StringField):
 
 
 class AddressField(TextAreaField):
+    """Convert an input address into a list of address lines."""
     def process_formdata(self, valuelist):
         if valuelist:
             self.data = [x.strip(', ') for x in
@@ -28,6 +29,7 @@ class AddressField(TextAreaField):
 
 
 class InvoiceInfoForm(Form):
+    """Information not concerning the sold items."""
     invoice_number = StrippedStringField('Invoice number',
                                          [validators.DataRequired()])
     invoice_date = DateField('Invoice date', [validators.InputRequired()])
@@ -54,6 +56,7 @@ class InvoiceInfoForm(Form):
 
 
 class InvoiceItemForm(Form):
+    """Information for one invoice item (line item)."""
     description = StrippedStringField('Description',
                                       [validators.DataRequired()])
     unit_price = DecimalField('Unit price ex. VAT',
@@ -65,6 +68,7 @@ class InvoiceItemForm(Form):
 
 
 class InvoiceForm(Form):
+    """The input form containing the invoice data."""
     info = FormField(InvoiceInfoForm)
     items = FieldList(FormField(InvoiceItemForm), min_entries=1)
 
@@ -82,8 +86,6 @@ class InvoiceForm(Form):
 app = Flask(__name__)
 app.secret_key = secrets.token_urlsafe(16)
 
-#  TODO: use formtarget="_blank" to open the invoice in a new tab
-
 demo_data: dict[str, Any] = {'info': {}, 'items': [{}]}
 demo_data['info']['seller_name'] = "The Seller Co."
 demo_data['info']['invoice_date'] = datetime.now().date()
@@ -98,7 +100,15 @@ demo_data['items'][0]['unit_price'] = Decimal("9.99")
 demo_data['items'][0]['quantity'] = 2
 
 
-def process_data(form_data):
+class InvoiceItem:
+    def __init__(self, description, unit_price, quantity):
+        self.description = description
+        self.unit_price = round(Decimal(unit_price), 2)
+        self.quantity = int(quantity)
+        self.total_ex_vat = self.unit_price * self.quantity
+
+
+def calculate_invoice(form_data):
     data = form_data['info']
     data['seller_address_single_line'] = ", ".join(data['seller_address'])
     data['buyer_address_lines'] = data['buyer_address']
@@ -107,14 +117,11 @@ def process_data(form_data):
     data['total_vat'] = Decimal('0.00')
     data['invoice_items'] = []
     for item in form_data['items']:
-        t = {}
-        t['description'] = item['description']
-        t['unit_price'] = round(Decimal(item['unit_price']), 2)
-        t['quantity'] = int(item['quantity'])
-        t['total_ex_vat'] = t['unit_price'] * t['quantity']
-        data['invoice_items'].append(t)
-        data['total_ex_vat'] += t['total_ex_vat']
-        data['total_vat'] += (t['total_ex_vat'] * vat_rate)
+        invoice_item = InvoiceItem(item['description'], item['unit_price'],
+                                   item['quantity'])
+        data['invoice_items'].append(invoice_item)
+        data['total_ex_vat'] += invoice_item.total_ex_vat
+        data['total_vat'] += (invoice_item.total_ex_vat * vat_rate)
 
     data['total_vat'] = data['total_vat'].quantize(Decimal('0.01'),
                                                    rounding=decimal.ROUND_DOWN)
@@ -134,7 +141,7 @@ def index_get():
 def index_post():
     form = InvoiceForm(request.form)
     if form.validate():
-        invoice_data = process_data(form.data)
+        invoice_data = calculate_invoice(form.data)
         return render_template("invoice.html", **invoice_data,
                                open_print_dialog=open_print_dialog)
     elif form.csrf_token.errors:
