@@ -1,3 +1,2 @@
 Flask==3.0.0
-reportlab==3.6.13
-xhtml2pdf==0.2.10
+WTForms==3.1.1
