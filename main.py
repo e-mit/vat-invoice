@@ -9,6 +9,7 @@ from datetime import timedelta, datetime
 from typing import Any
 
 open_print_dialog = False
+open_in_new_tab = False
 
 
 class InvoiceInfoForm(Form):
@@ -101,7 +102,8 @@ def process_data(form_data):
 def index_get():
     form = InvoiceForm(request.form, **demo_data)
     return render_template("form.html", form=form,
-                           title="VAT invoice generator")
+                           title="VAT invoice generator",
+                           open_in_new_tab=open_in_new_tab)
 
 
 @app.post("/")

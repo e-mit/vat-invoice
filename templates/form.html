@@ -18,7 +18,8 @@
     </ol>
   </details>
 
-  <form action="" method="post" id="invoice_form" onreset="removeAllAddedRows()" target="_blank">
+  <form action="" method="post" id="invoice_form" onreset="removeAllAddedRows()"
+  {% if open_in_new_tab %}target="_blank"{% endif %}>
     {{ form.csrf_token }}
     {% for field in form.info %}
       {{ field.label }} {{ field(class="clearable") }}
