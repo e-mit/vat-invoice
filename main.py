@@ -4,6 +4,7 @@ import decimal
 from decimal import Decimal
 from wtforms import Form, DateField, StringField, validators, FieldList
 from wtforms import DecimalField, IntegerField, TextAreaField, FormField
+from wtforms import ValidationError
 from wtforms.csrf.session import SessionCSRF
 from datetime import timedelta, datetime
 from typing import Any
@@ -12,24 +13,40 @@ open_print_dialog = False
 open_in_new_tab = False
 
 
+class StrippedStringField(StringField):
+    def process_formdata(self, valuelist):
+        if valuelist:
+            self.data = valuelist[0].strip()
+
+
 class InvoiceInfoForm(Form):
-    invoice_number = StringField('Invoice number',
-                                 [validators.DataRequired()])
+    invoice_number = StrippedStringField('Invoice number',
+                                         [validators.DataRequired()])
     invoice_date = DateField('Invoice date', [validators.InputRequired()])
-    currency_code = StringField('Currency code', [validators.DataRequired()])
+    currency_code = StrippedStringField('Currency code',
+                                        [validators.DataRequired()])
     vat_percent = DecimalField('VAT rate (%)', [validators.InputRequired(),
                                                 validators.NumberRange(min=0)])
-    seller_name = StringField('Seller name', [validators.DataRequired()])
-    seller_vat_number = StringField('Seller VAT number',
-                                    [validators.DataRequired()])
+    seller_name = StrippedStringField('Seller name',
+                                      [validators.DataRequired()])
+    seller_vat_number = StrippedStringField('Seller VAT number',
+                                            [validators.DataRequired()],
+                                            filters=[str.upper])
     seller_address = TextAreaField('Seller address',
                                    [validators.DataRequired()])
     buyer_address = TextAreaField('Buyer name and address (optional)',
                                   [validators.Optional()])
 
+    def validate_seller_vat_number(self, field):
+        """Do not attempt a proper validation but check for country prefix."""
+        valid = (len(field.data) >= 3) and field.data[0:2].isalpha()
+        if not valid:
+            raise ValidationError('VAT number must start with 2 letters')
+
 
 class InvoiceItemForm(Form):
-    description = StringField('Description', [validators.DataRequired()])
+    description = StrippedStringField('Description',
+                                      [validators.DataRequired()])
     unit_price = DecimalField('Unit price ex. VAT',
                               [validators.InputRequired(),
                                validators.NumberRange(min=0)],
