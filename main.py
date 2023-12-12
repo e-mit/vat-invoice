@@ -19,6 +19,14 @@ class StrippedStringField(StringField):
             self.data = valuelist[0].strip()
 
 
+class AddressField(TextAreaField):
+    def process_formdata(self, valuelist):
+        if valuelist:
+            self.data = [x.strip(', ') for x in
+                         valuelist[0].strip().splitlines()]
+            self.data = [x for x in self.data if x]
+
+
 class InvoiceInfoForm(Form):
     invoice_number = StrippedStringField('Invoice number',
                                          [validators.DataRequired()])
@@ -26,16 +34,17 @@ class InvoiceInfoForm(Form):
     currency_code = StrippedStringField('Currency code',
                                         [validators.DataRequired()])
     vat_percent = DecimalField('VAT rate (%)', [validators.InputRequired(),
-                                                validators.NumberRange(min=0)])
+                                                validators.NumberRange(
+                                                    min=0, max=100)])
     seller_name = StrippedStringField('Seller name',
                                       [validators.DataRequired()])
     seller_vat_number = StrippedStringField('Seller VAT number',
                                             [validators.DataRequired()],
                                             filters=[str.upper])
-    seller_address = TextAreaField('Seller address',
-                                   [validators.DataRequired()])
-    buyer_address = TextAreaField('Buyer name and address (optional)',
-                                  [validators.Optional()])
+    seller_address = AddressField('Seller address',
+                                  [validators.DataRequired()])
+    buyer_address = AddressField('Buyer name and address (optional)',
+                                 [validators.Optional()])
 
     def validate_seller_vat_number(self, field):
         """Do not attempt a proper validation but check for country prefix."""
@@ -91,10 +100,8 @@ demo_data['items'][0]['quantity'] = 2
 
 def process_data(form_data):
     data = form_data['info']
-    data['seller_address_single_line'] = ", ".join(
-        data['seller_address'].strip().splitlines())
-    data['buyer_address_lines'] = data['buyer_address'].strip().splitlines()
-
+    data['seller_address_single_line'] = ", ".join(data['seller_address'])
+    data['buyer_address_lines'] = data['buyer_address']
     vat_rate = Decimal(data['vat_percent'])/Decimal("100")
     data['total_ex_vat'] = Decimal('0.00')
     data['total_vat'] = Decimal('0.00')
@@ -133,9 +140,11 @@ def index_post():
     elif form.csrf_token.errors:
         return (render_template("error.html", title="CSRF token error"), 419)
     elif form.form_errors:
-        return (render_template("error.html", title="The form was inconsistent"), 422)
+        return (render_template("error.html",
+                                title="The form was inconsistent"), 422)
     elif form.errors:
-        return (render_template("error.html", title="The form contained errors"), 422)
+        return (render_template("error.html",
+                                title="The form contained errors"), 422)
     else:
         return (render_template("error.html", title="Unknown error"), 500)
 
