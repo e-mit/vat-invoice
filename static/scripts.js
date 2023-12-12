@@ -1,17 +1,42 @@
 function addRow() {
-    const lastRow = Array.from(document.getElementById("item_table").getElementsByTagName("tr")).pop();
-    const cells = lastRow.getElementsByTagName("td");
-    let newRow = document.getElementById("item_table").insertRow();
-    for (let i = 0; i < cells.length; i++) {
-        let newInput = cells[i].children[0].cloneNode();
-        const idParts = newInput.id.split('-');
-        if (idParts.length != 3) {
-            console.log("ERROR");
+    try {
+        const lastRow = Array.from(document.getElementById("item_table").getElementsByTagName("tr")).pop();
+        const lastRowCells = lastRow.getElementsByTagName("td");
+        let newRow = document.getElementById("item_table").insertRow();
+        for (let i = 0; i < lastRowCells.length; i++) {
+            newRow.insertCell().appendChild(createNewInput(lastRowCells[i].children[0]));
         }
-        newInput.value = ""
-        newInput.id = `${idParts[0]}-${Number(idParts[1])+1}-${idParts[2]}`
-        newInput.name = newInput.id;
-        newRow.insertCell().appendChild(newInput);
+    }
+    catch (e) {
+        formError(e.message);
+    }
+}
+
+function createNewInput(oldInput) {
+    let newInput = oldInput.cloneNode();
+    // Expect id to have the WTF format 'a-N-b'
+    const idParts = newInput.id.split('-');
+    if (idParts.length != 3) {
+        throw new Error("Invalid input id format");
+    }
+    const newNumber = Number(idParts[1]) + 1
+    if (isNaN(newNumber)) {
+        throw new Error("Input id NaN");
+    }
+    newInput.id = `${idParts[0]}-${newNumber}-${idParts[2]}`
+    newInput.name = newInput.id;
+    newInput.value = ""
+    return newInput;
+}
+
+function formError(errorDescription = '') {
+    let submitters = document.querySelectorAll('input[type=submit][form=invoice_form]');
+    for (let submitter of submitters.values()) {
+        submitter.disabled = true;
+    }
+    document.getElementById("error-message").innerHTML = "An error has occurred";
+    if (errorDescription) {
+        document.getElementById("error-message").innerHTML += `: ${errorDescription}`;
     }
 }
 
