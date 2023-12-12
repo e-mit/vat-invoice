@@ -4,7 +4,7 @@ import decimal
 from decimal import Decimal
 from wtforms import Form, DateField, StringField, validators, FieldList
 from wtforms import DecimalField, IntegerField, TextAreaField, FormField
-from wtforms import ValidationError
+from wtforms import ValidationError, Field
 from wtforms.csrf.session import SessionCSRF
 from datetime import timedelta, datetime
 from typing import Any
@@ -14,18 +14,18 @@ open_in_new_tab = False
 
 
 class StrippedStringField(StringField):
-    def process_formdata(self, valuelist):
+    def process_formdata(self, valuelist: list[Any]) -> None:
         if valuelist:
             self.data = valuelist[0].strip()
 
 
 class AddressField(TextAreaField):
     """Convert an input address into a list of address lines."""
-    def process_formdata(self, valuelist):
+    def process_formdata(self, valuelist: list[Any]) -> None:
         if valuelist:
             self.data = [x.strip(', ') for x in
-                         valuelist[0].strip().splitlines()]
-            self.data = [x for x in self.data if x]
+                         valuelist[0].strip().splitlines()]  # type: ignore
+            self.data = [x for x in self.data if x]  # type: ignore
 
 
 class InvoiceInfoForm(Form):
@@ -48,7 +48,7 @@ class InvoiceInfoForm(Form):
     buyer_address = AddressField('Buyer name and address (optional)',
                                  [validators.Optional()])
 
-    def validate_seller_vat_number(self, field):
+    def validate_seller_vat_number(self, field: Field) -> None:
         """Do not attempt a proper validation but check for country prefix."""
         valid = (len(field.data) >= 3) and field.data[0:2].isalpha()
         if not valid:
@@ -101,14 +101,15 @@ demo_data['items'][0]['quantity'] = 2
 
 
 class InvoiceItem:
-    def __init__(self, description, unit_price, quantity):
+    def __init__(self, description: str, unit_price: Decimal,
+                 quantity: int) -> None:
         self.description = description
         self.unit_price = round(Decimal(unit_price), 2)
         self.quantity = int(quantity)
         self.total_ex_vat = self.unit_price * self.quantity
 
 
-def calculate_invoice(form_data):
+def calculate_invoice(form_data: dict[str, Any]) -> dict[str, Any]:
     data = form_data['info']
     data['seller_address_single_line'] = ", ".join(data['seller_address'])
     data['buyer_address_lines'] = data['buyer_address']
@@ -130,7 +131,7 @@ def calculate_invoice(form_data):
 
 
 @app.get("/")
-def index_get():
+def index_get() -> str:
     form = InvoiceForm(request.form, **demo_data)
     return render_template("form.html", form=form,
                            title="VAT invoice generator",
@@ -138,13 +139,13 @@ def index_get():
 
 
 @app.post("/")
-def index_post():
+def index_post() -> str | tuple[str, int]:
     form = InvoiceForm(request.form)
     if form.validate():
         invoice_data = calculate_invoice(form.data)
         return render_template("invoice.html", **invoice_data,
                                open_print_dialog=open_print_dialog)
-    elif form.csrf_token.errors:
+    elif form.csrf_token.errors:  # type: ignore
         return (render_template("error.html", title="CSRF token error"), 419)
     elif form.form_errors:
         return (render_template("error.html",
@@ -157,7 +158,7 @@ def index_post():
 
 
 @app.errorhandler(404)
-def page_not_found(error):
+def page_not_found(error) -> tuple[str, int]:
     return (render_template("error.html", title="Page not found"), 404)
 
 
