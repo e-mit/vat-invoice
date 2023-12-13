@@ -14,7 +14,7 @@ open_in_new_tab = False
 
 
 app = Flask(__name__)
-app.secret_key = secrets.token_urlsafe(16)
+app.secret_key = secrets.token_urlsafe(32)
 
 
 @app.get("/")
