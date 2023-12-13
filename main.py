@@ -33,8 +33,6 @@ def index_post() -> str | tuple[str, int]:
         invoice_data = calculate_invoice(form.data)
         return render_template("invoice.html", **invoice_data,
                                open_print_dialog=open_print_dialog)
-    elif form.errors:
-        return index_get(form)
     elif form.csrf_token.errors:  # type: ignore
         return (render_template("error.html", title="CSRF token error"),
                 HTTP_CSRF_ERROR)
@@ -42,6 +40,8 @@ def index_post() -> str | tuple[str, int]:
         return (render_template("error.html",
                                 title="The form was inconsistent"),
                 HTTP_UNPROCESSABLE_CONTENT)
+    elif form.errors:
+        return index_get(form)
     else:
         return (render_template("error.html", title="Unknown error"),
                 HTTP_INTERNAL_SERVER_ERROR)
