@@ -1,17 +1,21 @@
+:root {
+  --error-shade: rgb(255,200,200);
+}
+
 body {
-    font-family: "Helvetica", "Arial", sans-serif;
-    font-size: 1.0rem;
-    grid-template-columns: 1fr min(45rem,95%) 1fr;
+  font-family: "Helvetica", "Arial", sans-serif;
+  font-size: 1.0rem;
+  grid-template-columns: 1fr min(45rem,95%) 1fr;
 }
 
 ol {
-    padding-left: 1.5rem;
+  padding-left: 1.5rem;
 }
 
 textarea {
-    font-size: 1em;
-    line-height: 1.2em;
-    height: 4.6em;
+  font-size: 1em;
+  line-height: 1.2em;
+  height: 4.6em;
 }
 
 /* Remove number input arrows on Chrome, Safari, Edge, Opera */
@@ -52,8 +56,13 @@ form > label {
   display: flex;
 }
 
-#invoice_form > input:has(+ .error), #invoice_form > textarea:has(+ .error) {
-  color: red;
+#invoice_form > input:has(+ .error),
+#invoice_form > textarea:has(+ .error) {
+  background-color: var(--error-shade);
+}
+
+.error-cell > input {
+  background-color: var(--error-shade);
 }
 
 table {
@@ -69,6 +78,10 @@ form textarea, form input {
   display: grid;
   grid-template-columns: 5rem 5rem 1fr;
   column-gap: 0.5rem;
+}
+
+.table-error + #add-remove-button-box {
+  margin-top: 1.5rem;
 }
 
 #add-remove-button-box > button {
@@ -89,4 +102,9 @@ form textarea, form input {
   color: red;
   font-weight: bold;
   text-align: center;
+}
+
+.table-error {
+  color: red;
+  font-weight: bold;
 }

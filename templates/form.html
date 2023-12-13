@@ -21,6 +21,7 @@
   <form action="" method="post" id="invoice_form" onreset="removeAllAddedRows()"
   {% if open_in_new_tab %}target="_blank"{% endif %}>
     {{ form.csrf_token }}
+
     {% for field in form.info %}
       {{ field.label }} {{ field(class="clearable") }}
       {% for error in field.errors %}
@@ -39,16 +40,24 @@
       <tbody id="item_table">
         <tr>
           {% for field in form.items[0] %}
-            <td>{{ field(class="clearable") }}</td>
+            <td {% if field.errors %}class="error-cell"{% endif %}>{{ field(class="clearable") }}</td>
           {% endfor %}
         </tr>
       </tbody>
     </table>
   </form>
+
+  {% for field in form.items[0] %}
+    {% for error in field.errors %}
+      <div class="table-error">{{ error | e }}</div>
+    {% endfor %}
+  {% endfor %}
+
   <div id="add-remove-button-box">
     <button type="button" onclick="addRow()">+</button>
     <button type="button" onclick="removeRow()">−</button>
   </div>
+
   <div id="form-button-box">
     <input type="reset" value="Use demo values" form="invoice_form">
     <button type="button" onclick="clearForm()">Clear form</button>
