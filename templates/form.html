@@ -23,6 +23,9 @@
     {{ form.csrf_token }}
     {% for field in form.info %}
       {{ field.label }} {{ field(class="clearable") }}
+      {% for error in field.errors %}
+        <div class="error">{{ error | e }}</div>
+      {% endfor %}
     {% endfor %}
 
     <table>
@@ -50,7 +53,7 @@
     <input type="reset" value="Use demo values" form="invoice_form">
     <button type="button" onclick="clearForm()">Clear form</button>
     <input type="submit" value="Generate" form="invoice_form">
-    <div id="error-message"></div>
+    <div class="error" id="error-message"></div>
   </div>
 
 {% endblock content %}
