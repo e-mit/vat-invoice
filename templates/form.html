@@ -12,13 +12,13 @@
     <summary>How to use</summary>
     <ol>
       <li>Fill out the form: all fields are required except for the buyer's details.
-          Alternatively, populate with demo data for testing.</li>
+          Alternatively, populate with demo values for testing.</li>
       <li>Click the 'Generate' button to create the invoice. It will open in a new tab or window.</li>
       <li>Print the invoice to paper or PDF. Choose the 'fit to page width' option in the print dialog.</li>
     </ol>
   </details>
 
-  <form action="" method="post" id="invoice_form" onreset="removeAllAddedRows()"
+  <form action="" method="post" id="invoice-form" onreset="removeAllAddedRows()"
   {% if open_in_new_tab %}target="_blank"{% endif %}>
     {{ form.csrf_token }}
 
@@ -37,7 +37,7 @@
           {% endfor %}
         </tr>
       </thead>
-      <tbody id="item_table">
+      <tbody id="item-table">
         {% for item in form.items %}
           <tr>
             {% for field in item %}
@@ -65,7 +65,7 @@
   <div id="form-button-box">
     <button onClick="window.location.href=window.location.href">Use demo values</button>
     <button type="button" onclick="clearForm()">Clear form</button>
-    <input type="submit" value="Generate" form="invoice_form">
+    <input type="submit" value="Generate" form="invoice-form">
     <div class="error" id="error-message"></div>
   </div>
 

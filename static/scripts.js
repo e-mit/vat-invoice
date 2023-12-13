@@ -1,8 +1,8 @@
 function addRow() {
     try {
-        const lastRow = Array.from(document.getElementById("item_table").getElementsByTagName("tr")).pop();
+        const lastRow = Array.from(document.getElementById("item-table").getElementsByTagName("tr")).pop();
         const lastRowCells = lastRow.getElementsByTagName("td");
-        let newRow = document.getElementById("item_table").insertRow();
+        let newRow = document.getElementById("item-table").insertRow();
         for (let i = 0; i < lastRowCells.length; i++) {
             newRow.insertCell().appendChild(createNewInput(lastRowCells[i].children[0]));
         }
@@ -30,7 +30,7 @@ function createNewInput(oldInput) {
 }
 
 function formError(errorDescription = '') {
-    let submitters = document.querySelectorAll('input[type=submit][form=invoice_form]');
+    let submitters = document.querySelectorAll('input[type=submit][form=invoice-form]');
     for (let submitter of submitters.values()) {
         submitter.disabled = true;
     }
@@ -41,13 +41,13 @@ function formError(errorDescription = '') {
 }
 
 function countRows() {
-    let tableRows = document.getElementById("item_table").getElementsByTagName("tr");
+    let tableRows = document.getElementById("item-table").getElementsByTagName("tr");
     return tableRows.length;
 }
 
 function removeRow() {
     if (countRows() > 1) {
-        let tableRows = Array.from(document.getElementById("item_table").getElementsByTagName("tr"));
+        let tableRows = Array.from(document.getElementById("item-table").getElementsByTagName("tr"));
         tableRows.pop().remove();
     }
 }
@@ -59,7 +59,7 @@ function removeAllAddedRows() {
 }
 
 function clearForm() {
-    let elements = Array.from(document.getElementById("invoice_form").getElementsByClassName("clearable"));
+    let elements = Array.from(document.getElementById("invoice-form").getElementsByClassName("clearable"));
     for (let i = 0; i < elements.length; i++) {
         elements[i].value = "";
     }
