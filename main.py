@@ -24,14 +24,18 @@ class StrippedStringField(StringField):
             self.data = valuelist[0].strip()
 
 
-class AddressField(TextAreaField):
-    """Convert an input address into a list of address lines."""
+def split_address(address: str) -> list[str]:
+    """Separate a multi-line address string into a list of lines."""
+    data = [x.strip(', ') for x in
+            address.strip().splitlines()]
+    data = [x for x in data if x]
+    return data
+
+
+class StrippedTextAreaField(TextAreaField):
     def process_formdata(self, valuelist: list[Any]) -> None:
         if valuelist:
-            self.data: list[str]
-            self.data = [x.strip(', ') for x in
-                         valuelist[0].strip().splitlines()]
-            self.data = [x for x in self.data if x]
+            self.data = valuelist[0].strip()
 
 
 class InvoiceInfoForm(Form):
@@ -49,10 +53,10 @@ class InvoiceInfoForm(Form):
     seller_vat_number = StrippedStringField('Seller VAT number',
                                             [validators.DataRequired()],
                                             filters=[str.upper])
-    seller_address = AddressField('Seller address',
-                                  [validators.DataRequired()])
-    buyer_address = AddressField('Buyer name and address (optional)',
-                                 [validators.Optional()])
+    seller_address = StrippedTextAreaField('Seller address',
+                                           [validators.DataRequired()])
+    buyer_address = StrippedTextAreaField('Buyer name and address (optional)',
+                                          [validators.Optional()])
 
     def validate_seller_vat_number(self, field: Field) -> None:
         """Do not attempt a proper validation but check for country prefix."""
@@ -109,6 +113,7 @@ demo_data['items'][1]['description'] = "Delivery"
 demo_data['items'][1]['unit_price'] = Decimal("4.99")
 demo_data['items'][1]['quantity'] = 1
 
+
 class InvoiceItem:
     def __init__(self, description: str, unit_price: Decimal,
                  quantity: int) -> None:
@@ -120,10 +125,9 @@ class InvoiceItem:
 
 def calculate_invoice(form_data: dict[str, Any]) -> dict[str, Any]:
     data = form_data['info']
-    data['seller_address_single_line'] = ", ".join(data['seller_address'])
-    data['buyer_address_lines'] = data['buyer_address']
-    #data['seller_address_single_line'] = ", ".join(
-    #    data['seller_address_lines'])
+    data['seller_address_single_line'] = ", ".join(split_address(
+        data['seller_address']))
+    data['buyer_address_lines'] = split_address(data['buyer_address'])
     vat_rate = Decimal(data['vat_percent'])/Decimal("100")
     data['total_ex_vat'] = Decimal('0.00')
     data['total_vat'] = Decimal('0.00')
@@ -154,10 +158,6 @@ def index_get(form=None) -> str:
 def index_post() -> str | tuple[str, int]:
     form = InvoiceForm(request.form)
     if form.validate():
-        #setattr(form.info.form, 'seller_address_lines',
-        #        form.info.form.seller_address.data_list)
-        #setattr(form.info.form, 'buyer_address_lines',
-        #        form.info.form.buyer_address.data_list)
         invoice_data = calculate_invoice(form.data)
         return render_template("invoice.html", **invoice_data,
                                open_print_dialog=open_print_dialog)
