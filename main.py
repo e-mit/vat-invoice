@@ -9,6 +9,11 @@ from wtforms.csrf.session import SessionCSRF
 from datetime import timedelta, datetime
 from typing import Any
 
+HTTP_UNPROCESSABLE_CONTENT = 422
+HTTP_INTERNAL_SERVER_ERROR = 500
+HTTP_NOT_FOUND = 404
+HTTP_CSRF_ERROR = 419
+
 open_print_dialog = False
 open_in_new_tab = False
 
@@ -23,9 +28,10 @@ class AddressField(TextAreaField):
     """Convert an input address into a list of address lines."""
     def process_formdata(self, valuelist: list[Any]) -> None:
         if valuelist:
+            self.data: list[str]
             self.data = [x.strip(', ') for x in
-                         valuelist[0].strip().splitlines()]  # type: ignore
-            self.data = [x for x in self.data if x]  # type: ignore
+                         valuelist[0].strip().splitlines()]
+            self.data = [x for x in self.data if x]
 
 
 class InvoiceInfoForm(Form):
@@ -113,6 +119,8 @@ def calculate_invoice(form_data: dict[str, Any]) -> dict[str, Any]:
     data = form_data['info']
     data['seller_address_single_line'] = ", ".join(data['seller_address'])
     data['buyer_address_lines'] = data['buyer_address']
+    #data['seller_address_single_line'] = ", ".join(
+    #    data['seller_address_lines'])
     vat_rate = Decimal(data['vat_percent'])/Decimal("100")
     data['total_ex_vat'] = Decimal('0.00')
     data['total_vat'] = Decimal('0.00')
@@ -131,8 +139,9 @@ def calculate_invoice(form_data: dict[str, Any]) -> dict[str, Any]:
 
 
 @app.get("/")
-def index_get() -> str:
-    form = InvoiceForm(request.form, **demo_data)
+def index_get(form=None) -> str:
+    if not form:
+        form = InvoiceForm(None, **demo_data)
     return render_template("form.html", form=form,
                            title="VAT invoice generator",
                            open_in_new_tab=open_in_new_tab)
@@ -142,24 +151,31 @@ def index_get() -> str:
 def index_post() -> str | tuple[str, int]:
     form = InvoiceForm(request.form)
     if form.validate():
+        #setattr(form.info.form, 'seller_address_lines',
+        #        form.info.form.seller_address.data_list)
+        #setattr(form.info.form, 'buyer_address_lines',
+        #        form.info.form.buyer_address.data_list)
         invoice_data = calculate_invoice(form.data)
         return render_template("invoice.html", **invoice_data,
                                open_print_dialog=open_print_dialog)
+    elif form.errors:
+        return index_get(form)
     elif form.csrf_token.errors:  # type: ignore
-        return (render_template("error.html", title="CSRF token error"), 419)
+        return (render_template("error.html", title="CSRF token error"),
+                HTTP_CSRF_ERROR)
     elif form.form_errors:
         return (render_template("error.html",
-                                title="The form was inconsistent"), 422)
-    elif form.errors:
-        return (render_template("error.html",
-                                title="The form contained errors"), 422)
+                                title="The form was inconsistent"),
+                HTTP_UNPROCESSABLE_CONTENT)
     else:
-        return (render_template("error.html", title="Unknown error"), 500)
+        return (render_template("error.html", title="Unknown error"),
+                HTTP_INTERNAL_SERVER_ERROR)
 
 
-@app.errorhandler(404)
+@app.errorhandler(HTTP_NOT_FOUND)
 def page_not_found(error) -> tuple[str, int]:
-    return (render_template("error.html", title="Page not found"), 404)
+    return (render_template("error.html", title="Page not found"),
+            HTTP_NOT_FOUND)
 
 
 if __name__ == "__main__":
