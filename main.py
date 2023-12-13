@@ -104,7 +104,10 @@ demo_data['info']['vat_percent'] = 20
 demo_data['items'][0]['description'] = "Widget"
 demo_data['items'][0]['unit_price'] = Decimal("9.99")
 demo_data['items'][0]['quantity'] = 2
-
+demo_data['items'].append({})
+demo_data['items'][1]['description'] = "Delivery"
+demo_data['items'][1]['unit_price'] = Decimal("4.99")
+demo_data['items'][1]['quantity'] = 1
 
 class InvoiceItem:
     def __init__(self, description: str, unit_price: Decimal,

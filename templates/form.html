@@ -38,18 +38,22 @@
         </tr>
       </thead>
       <tbody id="item_table">
-        <tr>
-          {% for field in form.items[0] %}
-            <td {% if field.errors %}class="error-cell"{% endif %}>{{ field(class="clearable") }}</td>
-          {% endfor %}
-        </tr>
+        {% for item in form.items %}
+          <tr>
+            {% for field in item %}
+              <td {% if field.errors %}class="error-cell"{% endif %}>{{ field(class="clearable") }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
   </form>
 
-  {% for field in form.items[0] %}
-    {% for error in field.errors %}
-      <div class="table-error">{{ error | e }}</div>
+  {% for item in form.items %}
+    {% for field in item %}
+      {% for error in field.errors %}
+        <div class="table-error">{{ error | e }}</div>
+      {% endfor %}
     {% endfor %}
   {% endfor %}
 
@@ -59,7 +63,7 @@
   </div>
 
   <div id="form-button-box">
-    <input type="reset" value="Use demo values" form="invoice_form">
+    <button onClick="window.location.href=window.location.href">Use demo values</button>
     <button type="button" onclick="clearForm()">Clear form</button>
     <input type="submit" value="Generate" form="invoice_form">
     <div class="error" id="error-message"></div>
