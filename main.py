@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import secrets
 from invoice_form import InvoiceForm
 from demo_values import demo_values
-from invoice import calculate_invoice
+from invoice import Invoice
 
 HTTP_UNPROCESSABLE_CONTENT = 422
 HTTP_INTERNAL_SERVER_ERROR = 500
@@ -30,9 +30,10 @@ def index_get(form=None) -> str:
 def index_post() -> str | tuple[str, int]:
     form = InvoiceForm(request.form)
     if form.validate():
-        invoice_data = calculate_invoice(form.data)
-        return render_template("invoice.html", **invoice_data,
-                               open_print_dialog=open_print_dialog)
+        invoice = Invoice(form.data)
+        invoice.calculate_invoice()
+        return invoice.render_template("invoice.html",
+                                       open_print_dialog=open_print_dialog)
     elif form.csrf_token.errors:  # type: ignore
         return (render_template("error.html", title="CSRF token error"),
                 HTTP_CSRF_ERROR)

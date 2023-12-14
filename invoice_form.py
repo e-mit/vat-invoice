@@ -30,7 +30,8 @@ class InvoiceInfoForm(Form):
                                         [validators.DataRequired()])
     vat_percent = DecimalField('VAT rate (%)', [validators.InputRequired(),
                                                 validators.NumberRange(
-                                                    min=0, max=100)])
+                                                    min=0, max=100)],
+                               places=None)
     seller_name = StrippedStringField('Seller name',
                                       [validators.DataRequired()])
     seller_vat_number = StrippedStringField('Seller VAT number',
