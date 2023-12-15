@@ -1,8 +1,11 @@
 from flask import Flask, render_template, request
+from flask import jsonify, Response
 import secrets
 from invoice_form import InvoiceForm
 from demo_values import demo_values
 from invoice import Invoice
+from datetime import datetime
+import config
 
 HTTP_UNPROCESSABLE_CONTENT = 422
 HTTP_INTERNAL_SERVER_ERROR = 500
@@ -52,6 +55,14 @@ def index_post() -> str | tuple[str, int]:
 def page_not_found(error) -> tuple[str, int]:
     return (render_template("error.html", title="Page not found"),
             HTTP_NOT_FOUND)
+
+
+@app.get("/version")
+def version() -> Response:
+    return jsonify({
+        "version": config.VERSION,
+        "timestamp": str(datetime.now())
+    })
 
 
 if __name__ == "__main__":
