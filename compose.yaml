@@ -1,0 +1,8 @@
+# For development: uses flask development server
+services:
+  flask-app:
+    build: .
+    restart: always
+    ports:
+      - 8080:5000
+    command: python -m flask run --host=0.0.0.0
