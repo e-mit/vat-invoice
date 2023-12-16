@@ -7,6 +7,10 @@ from datetime import timedelta
 from typing import Any
 from flask import session
 import secrets
+import os
+
+CSRF_SECRET = str.encode(os.environ.get('CSRF_SECRET',
+                                        secrets.token_urlsafe(32)))
 
 
 class StrippedStringField(StringField):
@@ -69,7 +73,7 @@ class InvoiceForm(Form):
     class Meta:
         csrf = True
         csrf_class = SessionCSRF
-        csrf_secret = secrets.token_bytes(32)
+        csrf_secret = CSRF_SECRET
         csrf_time_limit = timedelta(minutes=30)
 
         @property

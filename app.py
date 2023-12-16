@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from flask import jsonify, Response
 import secrets
+import os
 from invoice_form import InvoiceForm
 from demo_values import demo_values
 from invoice import Invoice
@@ -17,7 +18,8 @@ open_in_new_tab = False
 
 
 app = Flask(__name__)
-app.secret_key = secrets.token_urlsafe(32)
+app.config["SECRET_KEY"] = os.environ.get('FLASK_SECRET_KEY',
+                                          secrets.token_urlsafe(32))
 
 
 @app.get("/")
