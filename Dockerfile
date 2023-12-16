@@ -11,8 +11,8 @@ RUN apk add --no-cache openssl
 #RUN apk add --no-cache wkhtmltopdf
 
 COPY requirements.txt requirements.txt
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Create a non-privileged user that the app will run under.
 RUN adduser -D nonroot
