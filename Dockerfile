@@ -7,6 +7,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+RUN apk add --no-cache openssl
 #RUN apk add --no-cache wkhtmltopdf
 
 COPY requirements.txt requirements.txt
