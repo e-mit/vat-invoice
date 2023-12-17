@@ -19,3 +19,5 @@ RUN adduser -D nonroot
 USER nonroot
 
 COPY . .
+
+CMD ./cmd.sh
