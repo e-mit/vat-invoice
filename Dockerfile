@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.11-alpine as base
+FROM python:3.11-alpine
 
 WORKDIR /app
 
@@ -17,7 +17,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Create a non-privileged user that the app will run under.
 RUN adduser -D nonroot
 USER nonroot
-
-EXPOSE 5000
 
 COPY . .
