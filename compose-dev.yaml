@@ -1,4 +1,4 @@
-# For development: uses flask development server
+# Uses flask development server
 services:
   flask-app:
     build: .
