@@ -1,8 +1,12 @@
-# Uses flask development server
+# Uses flask development server in debug mode, with bind mount
 services:
   flask-app:
     build: .
     restart: always
     ports:
       - 8080:5000
+    volumes:
+      - .:/app
+    environment:
+      FLASK_DEBUG: "true"
     command: python -m flask run --host=0.0.0.0
