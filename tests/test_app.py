@@ -1,6 +1,5 @@
 """Tests for app.py. Note: run with pytest --log-cli-level=DEBUG."""
 from flask.testing import FlaskClient
-from flask import session
 from app import app
 import pytest
 import app as flask_app
@@ -12,6 +11,7 @@ from typing import Any
 from bs4 import BeautifulSoup
 
 HTTP_SUCCESS = 200
+HOME_LINK = '<a href="/">Home</a>'
 
 
 def add_md(name: str, obj: Any, md: MultiDict) -> None:
@@ -82,7 +82,7 @@ def test_errorpage_homelink(client) -> None:
     """Check that the error page gives a link home."""
     response = client.get("/lkjhghjgcvhjkn")
     assert response.status_code == 404
-    assert '<a href="/">Home</a>' in response.text
+    assert HOME_LINK in response.text
 
 
 def test_post_index_no_data(client) -> None:
@@ -103,22 +103,45 @@ def test_post_index_demo_form(client) -> None:
                 in response.text)
 
 
-@pytest.mark.skip(reason="incomplete")
-def test_post_indfvfex(client) -> None:
-    body_data = {}
-    response = client.post("/", data=body_data)
-    assert response.status_code != HTTP_SUCCESS
-    query_string = {"key": "value"}
-    response = client.post("/", query_string=query_string)
-    assert response.status_code != HTTP_SUCCESS
-    headers = {}
-    response = client.post("/", headers=headers)
-    assert response.status_code != HTTP_SUCCESS
-
-
-@pytest.mark.skip(reason="incomplete")
-def test_access_session(client):
+def test_post_index_csrf_error(client) -> None:
     with client:
-        client.post("/auth/login", data={"username": "flask"})
-        # session is still accessible
-        assert session["user_id"] == 1
+        response = client.get("/")
+        assert response.status_code == HTTP_SUCCESS
+        md = dict_to_MultiDict(demo_values)
+        csrf_token = get_csrf_token(response.text)
+        md.add('csrf_token', csrf_token[2:])
+        response = client.post("/", data=md)
+        assert response.status_code == flask_app.HTTP_CSRF_ERROR
+        assert HOME_LINK in response.text
+
+
+def test_post_index_form_error(client) -> None:
+    """In this case, there is no HTTP error but the form is returned."""
+    with client:
+        response = client.get("/")
+        assert response.status_code == HTTP_SUCCESS
+        md = dict_to_MultiDict(demo_values)
+        md.add('csrf_token', get_csrf_token(response.text))
+        md.pop('info-vat_percent')
+        response = client.post("/", data=md)
+        assert response.status_code == HTTP_SUCCESS
+        assert "<strong>INVOICE</strong>" not in response.text
+        assert flask_app.APP_TITLE in response.text
+
+
+def test_post_index_exception(client) -> None:
+    with client:
+        response = client.post("/", data={'bad': 'yes'})
+        assert response.status_code == flask_app.HTTP_INTERNAL_SERVER_ERROR
+        assert HOME_LINK in response.text
+
+
+def test_post_index_change_flask_key(client) -> None:
+    with client:
+        response = client.get("/")
+        assert response.status_code == HTTP_SUCCESS
+        md = dict_to_MultiDict(demo_values)
+        md.add('csrf_token', get_csrf_token(response.text))
+        app.config["SECRET_KEY"] = "jhhbjji"
+        response = client.post("/", data=md)
+        assert response.status_code == flask_app.HTTP_CSRF_ERROR
