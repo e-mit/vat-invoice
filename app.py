@@ -19,8 +19,8 @@ HTTP_CSRF_ERROR = 419
 open_print_dialog = False
 open_in_new_tab = False
 
-
 app = Flask(__name__)
+app.logger.setLevel(os.environ.get('FLASK_LOG_LEVEL', 'WARNING'))
 app.config["SECRET_KEY"] = os.environ.get('FLASK_SECRET_KEY',
                                           secrets.token_urlsafe(32))
 
@@ -29,7 +29,7 @@ app.config["SECRET_KEY"] = os.environ.get('FLASK_SECRET_KEY',
 def index_get(form=None) -> str:
     if not form:
         form = InvoiceForm(None, **demo_values)
-    app.logger.warning(form.data)
+    app.logger.debug("Form data in index_get(): %s", form.data)
     return render_template("form.html", form=form,
                            title=APP_TITLE,
                            open_in_new_tab=open_in_new_tab)
@@ -38,20 +38,23 @@ def index_get(form=None) -> str:
 @app.post("/")
 def index_post() -> str | tuple[str, int]:
     try:
-        app.logger.warning(request.form)
+        app.logger.debug("Request form in index_post(): %s", request.form)
         form = InvoiceForm(request.form)
         if form.validate():
             invoice = Invoice(form.data, "invoice.html")
             invoice.calculate_invoice()
             return invoice.render(open_print_dialog)
         else:
-            app.logger.error('Invalid form data: %s', form)
             if form.csrf_token.errors:  # type: ignore
+                app.logger.warning('CSRF token error')
                 return (render_template("error.html", title="CSRF error"),
                         HTTP_CSRF_ERROR)
             elif form.form_errors:
+                app.logger.error('Form consistency errors: %s',
+                                 form.form_errors)
                 abort(HTTP_UNPROCESSABLE_CONTENT)
             elif form.errors:
+                app.logger.debug('Form field errors in: %s', form.data)
                 return index_get(form)
     except Exception:
         app.logger.error('Exception while handling form: %s', request.form)
