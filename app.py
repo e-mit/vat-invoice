@@ -9,6 +9,8 @@ from datetime import datetime
 import config
 from werkzeug.exceptions import HTTPException
 
+APP_TITLE = "VAT invoice generator"
+
 HTTP_UNPROCESSABLE_CONTENT = 422
 HTTP_INTERNAL_SERVER_ERROR = 500
 HTTP_NOT_FOUND = 404
@@ -27,29 +29,33 @@ app.config["SECRET_KEY"] = os.environ.get('FLASK_SECRET_KEY',
 def index_get(form=None) -> str:
     if not form:
         form = InvoiceForm(None, **demo_values)
+    app.logger.warning(form.data)
     return render_template("form.html", form=form,
-                           title="VAT invoice generator",
+                           title=APP_TITLE,
                            open_in_new_tab=open_in_new_tab)
 
 
 @app.post("/")
 def index_post() -> str | tuple[str, int]:
-    form = InvoiceForm(request.form)
-    if form.validate():
-        invoice = Invoice(form.data, "invoice.html")
-        invoice.calculate_invoice()
-        return invoice.render(open_print_dialog)
-    else:
-        app.logger.error('Invalid form data: %s', form)
-        if form.csrf_token.errors:  # type: ignore
-            return (render_template("error.html", title="CSRF token error"),
-                    HTTP_CSRF_ERROR)
-        elif form.form_errors:
-            abort(HTTP_UNPROCESSABLE_CONTENT)
-        elif form.errors:
-            return index_get(form)
+    try:
+        app.logger.warning(request.form)
+        form = InvoiceForm(request.form)
+        if form.validate():
+            invoice = Invoice(form.data, "invoice.html")
+            invoice.calculate_invoice()
+            return invoice.render(open_print_dialog)
         else:
-            abort(HTTP_INTERNAL_SERVER_ERROR)
+            app.logger.error('Invalid form data: %s', form)
+            if form.csrf_token.errors:  # type: ignore
+                return (render_template("error.html", title="CSRF error"),
+                        HTTP_CSRF_ERROR)
+            elif form.form_errors:
+                abort(HTTP_UNPROCESSABLE_CONTENT)
+            elif form.errors:
+                return index_get(form)
+    except Exception:
+        app.logger.error('Exception while handling form: %s', request.form)
+    abort(HTTP_INTERNAL_SERVER_ERROR)
 
 
 @app.errorhandler(HTTP_NOT_FOUND)
