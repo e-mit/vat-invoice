@@ -19,3 +19,9 @@ demo_values['items'].append({})
 demo_values['items'][1]['description'] = "Delivery"
 demo_values['items'][1]['unit_price'] = Decimal("4.99")
 demo_values['items'][1]['quantity'] = 1
+
+# Expected values:
+vat_percent = Decimal("20")
+total_ex_vat = Decimal("24.97")
+total_vat = Decimal("4.99")
+total = Decimal("29.96")
