@@ -4,56 +4,17 @@ from app import app
 import pytest
 import app as flask_app
 import config
-from invoice_form import InvoiceForm
 from demo_values import demo_values
-from werkzeug.datastructures import MultiDict
-from typing import Any
-from bs4 import BeautifulSoup
+from test_invoice_form import dict_to_MultiDict, get_csrf_token
 
 HTTP_SUCCESS = 200
 HOME_LINK = '<a href="/">Home</a>'
-
-
-def add_md(name: str, obj: Any, md: MultiDict) -> None:
-    if isinstance(obj, dict):
-        for k in obj.keys():
-            add_md(f'{name}-{k}', obj[k], md)
-    elif isinstance(obj, list):
-        for i, val in enumerate(obj):
-            add_md(f'{name}-{i}', val, md)
-    else:
-        if name[0] == '-':
-            name = name[1:]
-        md.add(name, str(obj))
-
-
-def dict_to_MultiDict(d: dict[str, Any]) -> MultiDict:
-    """Covert a dictionary to a MultiDict as expected by WTForms."""
-    md: MultiDict = MultiDict()
-    add_md('', d, md)
-    return md
-
-
-def get_csrf_token(html: str) -> str:
-    return BeautifulSoup(html, 'html.parser').select_one(
-            'input#csrf_token')['value']  # type: ignore
 
 
 @pytest.fixture
 def client() -> FlaskClient:
     app.testing = True
     return app.test_client()
-
-
-def test_dict_to_MultiDict(client) -> None:
-    with client:
-        response = client.get("/")
-        assert response.status_code == HTTP_SUCCESS
-        md = dict_to_MultiDict(demo_values)
-        md.add('csrf_token', get_csrf_token(response.text))
-        form = InvoiceForm(md)
-        assert form.validate()
-        assert demo_values['info']['seller_name'] == form.info.seller_name.data
 
 
 def test_get_index(client) -> None:
