@@ -3,15 +3,19 @@ import decimal
 from decimal import Decimal
 from typing import Any
 from copy import deepcopy
-import flask
+from jinja2 import Environment, FileSystemLoader
 
 
 class Invoice:
     """A VAT invoice."""
-    def __init__(self, invoice_data: dict[str, Any]) -> None:
+    def __init__(self, invoice_data: dict[str, Any],
+                 template_filename: str) -> None:
         self.info = deepcopy(invoice_data['info'])
         self.items = deepcopy(invoice_data['items'])
         self.format_addresses()
+        self.template_env = Environment(loader=FileSystemLoader("templates"),
+                                        autoescape=True).get_template(
+                                            template_filename)
 
     def format_addresses(self) -> None:
         self.info['seller_address_single_line'] = ", ".join(self.split_address(
@@ -50,6 +54,6 @@ class Invoice:
             Decimal('0.01'), rounding=decimal.ROUND_DOWN)
         self.info['total'] = self.info['total_ex_vat'] + self.info['total_vat']
 
-    def render_template(self, template_file: str, **kwargs) -> str:
-        return flask.render_template(template_file, **self.info,
-                                     items=self.items, **kwargs)
+    def render(self, open_print_dialog: bool) -> str:
+        return self.template_env.render(**self.info, items=self.items,
+                                        open_print_dialog=open_print_dialog)
