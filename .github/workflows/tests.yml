@@ -16,7 +16,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: test-build-${{ github.sha }}
-        run_id: ${{ github.event.workflow_run.id }}
+        run-id: ${{ github.event.workflow_run.id }}
     - name: Docker test run
       run: |
         docker load < test_image.tar
