@@ -1,0 +1,21 @@
+name: docker-test-build
+
+on: [push]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Docker test build
+      run: |
+        docker build --target test -t test:latest .
+        docker save test:latest > test_image.tar
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-build-${{ github.sha }}
+        path: test_image.tar
+        if-no-files-found: error
+        retention-days: 1

@@ -1,0 +1,27 @@
+name: tests
+# NB: this will run even if docker-test-build fails
+
+on:
+  workflow_run:
+    workflows:
+      - docker-test-build
+    types:
+      - completed
+
+jobs:
+  tests:
+    needs: test-build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Retrieve Docker image
+      uses: actions/download-artifact@v4
+      with:
+        name: test-build-${{ github.sha }}
+        # may need: github-token: ${{ secrets.GH_PAT }} # token with actions:read permissions on target repo
+    - name: Docker test run
+      run: |
+        docker load < test_image.tar
+        PORT=8000
+        docker run -td -p 8080:${PORT} --name test -e FLASK_LOG_LEVEL=DEBUG -e PORT=${PORT} --rm test:latest
+    - name: Tests
+      run: docker exec test python -m pytest -p no:cacheprovider

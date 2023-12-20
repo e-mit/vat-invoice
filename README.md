@@ -1,5 +1,8 @@
 # VAT invoice generator
 
+![Docker test build](https://github.com/e-mit/vat-invoice/actions/workflows/test_build.yml/badge.svg)
+![Tests](https://github.com/e-mit/vat-invoice/actions/workflows/tests.yml/badge.svg)
+
 A Python web application for creating VAT invoices.
 
 This project uses Flask, WTForms and Docker. [Try the example deployment on Google Cloud Run.](https://vat-invoice-service-uzzizxhvgq-ew.a.run.app/)
