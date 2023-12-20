@@ -38,7 +38,7 @@ def get_csrf_token(html: str) -> str:
             'input#csrf_token')['value']  # type: ignore
 
 
-def test_get_csrf_token(client) -> None:
+def test_get_csrf_token() -> None:
     csrf = "20231219151901##96dc18c10e830ac0862d97aa9f4de082b5154fc9"
     s = ('<input id="csrf_token" name="csrf_token" '
          f'type="hidden" value="{csrf}">')
