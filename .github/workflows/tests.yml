@@ -10,7 +10,6 @@ on:
 
 jobs:
   tests:
-    needs: test-build
     runs-on: ubuntu-latest
     steps:
     - name: Retrieve Docker image
