@@ -1,7 +1,15 @@
 # VAT invoice generator
 
-![Docker test build](https://github.com/e-mit/vat-invoice/actions/workflows/test_build.yml/badge.svg)
-![Tests](https://github.com/e-mit/vat-invoice/actions/workflows/tests.yml/badge.svg)
+![docker test build](https://github.com/e-mit/vat-invoice/actions/workflows/test_build.yml/badge.svg)
+![tests](https://github.com/e-mit/vat-invoice/actions/workflows/tests.yml/badge.svg)
+![coverage](https://github.com/e-mit/vat-invoice/actions/workflows/coverage.yml/badge.svg)
+![flake8](https://github.com/e-mit/vat-invoice/actions/workflows/flake8.yml/badge.svg)
+![mypy](https://github.com/e-mit/vat-invoice/actions/workflows/mypy.yml/badge.svg)
+![pycodestyle](https://github.com/e-mit/vat-invoice/actions/workflows/pycodestyle.yml/badge.svg)
+![pydocstyle](https://github.com/e-mit/vat-invoice/actions/workflows/pydocstyle.yml/badge.svg)
+![pylint](https://github.com/e-mit/vat-invoice/actions/workflows/pylint.yml/badge.svg)
+![pyright](https://github.com/e-mit/vat-invoice/actions/workflows/pyright.yml/badge.svg)
+![bandit](https://github.com/e-mit/vat-invoice/actions/workflows/bandit.yml/badge.svg)
 
 A Python web application for creating VAT invoices.
 

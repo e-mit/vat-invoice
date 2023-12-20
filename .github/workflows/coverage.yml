@@ -1,0 +1,32 @@
+name: coverage
+# NB: this will run even if docker-test-build fails
+
+on:
+  workflow_run:
+    workflows:
+      - docker-test-build
+    types:
+      - completed
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Retrieve Docker image
+      uses: actions/download-artifact@v4
+      with:
+        name: test-build-${{ github.sha }}
+        run-id: ${{ github.event.workflow_run.id }}
+        github-token: ${{ secrets.GH_PAT }} # token with actions:read permissions on target repo
+    - name: Docker test run
+      run: |
+        docker load < test_image.tar
+        PORT=8000
+        docker run -td -p 8080:${PORT} --name test -e FLASK_LOG_LEVEL=DEBUG -e PORT=${PORT} -e COVERAGE_FILE=/home/nonroot/.cov --rm test:latest
+    - name: Coverage error check
+      run: docker exec test python -m pytest --cov tests -p no:cacheprovider
+    - name: Coverage percentage check
+      run: |
+        target_coverage_pc=90
+        coverage_pc=$(docker exec test python -m pytest --cov tests -p no:cacheprovider | awk '$1 == "TOTAL" {print $NF+0}')
+        exit $(( coverage_pc < target_coverage_pc ))

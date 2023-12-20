@@ -12,7 +12,7 @@ jobs:
       run: |
         docker build --target test -t test:latest .
         docker save test:latest > test_image.tar
-    - name: Upload artifact
+    - name: Save image
       uses: actions/upload-artifact@v4
       with:
         name: test-build-${{ github.sha }}
