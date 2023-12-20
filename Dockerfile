@@ -13,17 +13,22 @@ RUN pip install --no-cache-dir --upgrade pip
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+FROM base as intermediate1
 COPY . .
 
-FROM base as intermediate
-RUN rm -Rf tests
+FROM intermediate1 as intermediate2
+RUN rm -rf tests
+RUN rm -f *_test.*
 
-FROM intermediate as release
+FROM base as release
+# Copying from an earlier target rather than using FROM ensures
+# that the removed files are not hidden in a layer in the release.
+COPY --from=intermediate2 /app .
 RUN adduser -D nonroot
 USER nonroot
 CMD ./cmd.sh
 
-FROM base as test
+FROM intermediate1 as test
 RUN adduser -D nonroot
 USER nonroot
 RUN pip install --no-cache-dir -r requirements_test.txt
