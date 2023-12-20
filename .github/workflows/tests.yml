@@ -16,7 +16,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: test-build-${{ github.sha }}
-        # may need: github-token: ${{ secrets.GH_PAT }} # token with actions:read permissions on target repo
+        github-token: ${{ secrets.GH_PAT }} # token with actions:read permissions on target repo
     - name: Docker test run
       run: |
         docker load < test_image.tar
