@@ -10,6 +10,7 @@
 ![pylint](https://github.com/e-mit/vat-invoice/actions/workflows/pylint.yml/badge.svg)
 ![pyright](https://github.com/e-mit/vat-invoice/actions/workflows/pyright.yml/badge.svg)
 ![bandit](https://github.com/e-mit/vat-invoice/actions/workflows/bandit.yml/badge.svg)
+![docker release build](https://github.com/e-mit/vat-invoice/actions/workflows/release_build.yml/badge.svg)
 
 A Python web application for creating VAT invoices.
 

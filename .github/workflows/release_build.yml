@@ -1,0 +1,21 @@
+name: docker-release-build
+
+on: [push]
+
+jobs:
+  release-build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Docker release build
+      run: |
+        docker build --target release -t release:latest .
+        docker save release:latest > release_image.tar
+    - name: Save image
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-build-${{ github.sha }}
+        path: release_image.tar
+        if-no-files-found: error
+        retention-days: 1
