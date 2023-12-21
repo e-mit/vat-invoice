@@ -42,7 +42,7 @@ class Invoice:
         """Calculate line-item/invoice VAT and total amounts."""
         self.info['vat_percent'] = self.remove_decimal_zeros(
             self.info['vat_percent'])
-        vat_rate = Decimal(self.info['vat_percent'])/Decimal("100")
+        vat_rate = Decimal(self.info['vat_percent']) / Decimal("100")
         self.info['total_ex_vat'] = Decimal('0.00')
         self.info['total_vat'] = Decimal('0.00')
         for item in self.items:
