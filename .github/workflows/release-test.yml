@@ -1,0 +1,27 @@
+name: release-test
+
+on:
+  workflow_run:
+    workflows:
+      - docker-release-build
+    types:
+      - completed
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Download and run docker image
+      uses: ./.github/actions/download-docker-artifact
+      with:
+        repo-read-token: ${{ secrets.GH_PAT }}
+        build-type: 'release'
+    - name: Release test
+      run: |
+        PORT=8000
+        docker run -d -p 8080:${PORT} --name release -e PORT=${PORT} --rm release:latest
+        sleep 4
+        page=$(curl http://127.0.0.1:8080)
+        if ! grep -q "VAT invoice deliberate_ERROR" <<< "$page"; then exit 1; fi
