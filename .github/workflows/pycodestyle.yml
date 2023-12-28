@@ -24,4 +24,4 @@ jobs:
         PORT=8000
         docker run -td -p 8080:${PORT} --name test -e FLASK_LOG_LEVEL=DEBUG -e PORT=${PORT} --rm test:latest
     - name: pycodestyle
-      run: docker exec test python -m pycodestyle *.py --exclude=tests/*
+      run: docker exec test sh -c 'python -m pycodestyle *.py --exclude=tests/*'
