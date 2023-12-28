@@ -20,3 +20,7 @@ jobs:
         repo-read-token: ${{ secrets.GH_PAT }}
     - name: pycodestyle
       run: docker exec test sh -c 'python -m pycodestyle *.py --exclude=tests/*'
+    - name: Save result
+      uses: ./.github/actions/save-workflow-result
+      with:
+        result: '0'
