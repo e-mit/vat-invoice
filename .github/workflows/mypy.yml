@@ -12,6 +12,8 @@ jobs:
   mypy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Deploy frontend
         uses: ./.github/actions/run-test-artifact
         with:
