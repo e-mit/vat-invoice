@@ -8,6 +8,7 @@ from jinja2 import Environment, FileSystemLoader
 
 class Invoice:
     """A VAT invoice."""
+
     def __init__(self, invoice_data: dict[str, Any],
                  template_filename: str) -> None:
         self.info = deepcopy(invoice_data['info'])
@@ -18,6 +19,7 @@ class Invoice:
                                             template_filename)
 
     def format_addresses(self) -> None:
+        """Convert buyer/seller addresses into the expected template format."""
         self.info['seller_address_single_line'] = ", ".join(self.split_address(
             self.info['seller_address']))
         self.info['buyer_address_lines'] = self.split_address(
@@ -55,5 +57,6 @@ class Invoice:
         self.info['total'] = self.info['total_ex_vat'] + self.info['total_vat']
 
     def render(self, open_print_dialog: bool) -> str:
+        """Create and return the complete invoice document."""
         return self.template_env.render(**self.info, items=self.items,
                                         open_print_dialog=open_print_dialog)

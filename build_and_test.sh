@@ -5,4 +5,4 @@ PORT=8000 && docker run -td -p 8080:${PORT} --name test -e FLASK_LOG_LEVEL=DEBUG
 
 docker exec test python -m pytest -p no:cacheprovider
 
-docker stop -t 0 test
+#docker stop -t 0 test

@@ -14,19 +14,26 @@ CSRF_SECRET = str.encode(os.environ.get('CSRF_SECRET',
 
 
 class StrippedStringField(StringField):
+    """A WTForms StringField which strips leading/trailing whitespace."""
+
     def process_formdata(self, valuelist: list[Any]) -> None:
+        """Override to implement the stripping."""
         if valuelist:
             self.data = valuelist[0].strip()
 
 
 class StrippedTextAreaField(TextAreaField):
+    """A WTForms TextAreaField which strips leading/trailing whitespace."""
+
     def process_formdata(self, valuelist: list[Any]) -> None:
+        """Override to implement the stripping."""
         if valuelist:
             self.data = valuelist[0].strip()
 
 
 class InvoiceInfoForm(Form):
     """General information, not concerning sold product/items."""
+
     invoice_number = StrippedStringField('Invoice number',
                                          [validators.DataRequired()])
     invoice_date = DateField('Invoice date', [validators.InputRequired()])
@@ -55,6 +62,7 @@ class InvoiceInfoForm(Form):
 
 class InvoiceItemForm(Form):
     """Information for one product/item line on the invoice."""
+
     description = StrippedStringField('Description',
                                       [validators.DataRequired()])
     unit_price = DecimalField('Unit price ex. VAT',
@@ -67,10 +75,13 @@ class InvoiceItemForm(Form):
 
 class InvoiceForm(Form):
     """The entire form for collecting the invoice data."""
+
     info = FormField(InvoiceInfoForm)
     items = FieldList(FormField(InvoiceItemForm), min_entries=1)
 
     class Meta:
+        """Settings for CSRF prevention."""
+
         csrf = True
         csrf_class = SessionCSRF
         csrf_secret = CSRF_SECRET
@@ -78,4 +89,5 @@ class InvoiceForm(Form):
 
         @property
         def csrf_context(self):
+            """Store CSRF data in the flask session."""
             return session

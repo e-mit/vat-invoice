@@ -1,3 +1,4 @@
+"""A Flask app for creating VAT invoices."""
 from flask import Flask, render_template, request
 from flask import jsonify, Response, abort
 import secrets
@@ -27,6 +28,7 @@ app.config["SECRET_KEY"] = os.environ.get('FLASK_SECRET_KEY',
 
 @app.get("/")
 def index_get(form=None) -> str:
+    """GET the main page which contains the form for input."""
     if not form:
         form = InvoiceForm(None, **demo_values)
     app.logger.debug("Form data in index_get(): %s", form.data)
@@ -37,6 +39,7 @@ def index_get(form=None) -> str:
 
 @app.post("/")
 def index_post() -> str | tuple[str, int]:
+    """POST for form data to be returned from main page."""
     try:
         app.logger.debug("Request form in index_post(): %s", request.form)
         form = InvoiceForm(request.form)
@@ -63,12 +66,14 @@ def index_post() -> str | tuple[str, int]:
 
 @app.errorhandler(HTTP_NOT_FOUND)
 def page_not_found_error(error) -> tuple[str, int]:
+    """Customize page for HTTP_NOT_FOUND."""
     return (render_template("error.html", title="Page not found"),
             HTTP_NOT_FOUND)
 
 
 @app.errorhandler(HTTP_INTERNAL_SERVER_ERROR)
 def internal_server_error(error) -> tuple[str, int]:
+    """Customize page for HTTP_INTERNAL_SERVER_ERROR."""
     return (render_template("error.html", title=("An error occurred "
                             "while responding to your request.")),
             HTTP_INTERNAL_SERVER_ERROR)
@@ -76,12 +81,14 @@ def internal_server_error(error) -> tuple[str, int]:
 
 @app.errorhandler(HTTP_UNPROCESSABLE_CONTENT)
 def unprocessable_content_error(error) -> tuple[str, int]:
+    """Customize page for HTTP_UNPROCESSABLE_CONTENT."""
     return (render_template("error.html", title="The form was inconsistent"),
             HTTP_UNPROCESSABLE_CONTENT)
 
 
 @app.errorhandler(HTTPException)
 def http_exception(error) -> tuple[str, int]:
+    """Customize page for all other HTTP exceptions."""
     return (render_template("error.html", title=("An unknown error "
                             "occurred while responding to your request.")),
             error.code)
@@ -89,6 +96,7 @@ def http_exception(error) -> tuple[str, int]:
 
 @app.get("/version")
 def version() -> Response:
+    """Check version and server response in a simple way."""
     return jsonify({
         "version": config.VERSION,
         "timestamp": str(datetime.now())
