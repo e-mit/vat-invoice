@@ -1,4 +1,5 @@
 """Configuration for Gunicorn server, which runs in the release build."""
+# pylint: disable=C0103
 # Gunicorn settings for Google cloud Run: one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.

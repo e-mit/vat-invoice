@@ -1,14 +1,14 @@
 """A Flask app for creating VAT invoices."""
-from flask import Flask, render_template, request
-from flask import jsonify, Response, abort
 import secrets
 import os
+from datetime import datetime
+from flask import Flask, render_template, request
+from flask import jsonify, Response, abort
+from werkzeug.exceptions import HTTPException
 from invoice_form import InvoiceForm
 from demo_values import demo_values
 from invoice import Invoice
-from datetime import datetime
 import config
-from werkzeug.exceptions import HTTPException
 
 APP_TITLE = "VAT invoice generator"
 

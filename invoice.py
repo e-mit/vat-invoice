@@ -37,8 +37,7 @@ class Invoice:
         """Remove insignificant zeros from a Decimal."""
         if d == d.to_integral():
             return d.quantize(Decimal(1))
-        else:
-            return d.normalize()
+        return d.normalize()
 
     def calculate_invoice(self) -> None:
         """Calculate line-item/invoice VAT and total amounts."""

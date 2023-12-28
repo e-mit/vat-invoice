@@ -1,13 +1,13 @@
 """Define the form object(s) which pass data between front and back ends."""
+import secrets
+import os
+from datetime import timedelta
+from typing import Any
+from flask import session
 from wtforms import Form, DateField, StringField, validators, FieldList
 from wtforms import DecimalField, IntegerField, TextAreaField, FormField
 from wtforms import ValidationError, Field
 from wtforms.csrf.session import SessionCSRF
-from datetime import timedelta
-from typing import Any
-from flask import session
-import secrets
-import os
 
 CSRF_SECRET = str.encode(os.environ.get('CSRF_SECRET',
                                         secrets.token_urlsafe(32)))
@@ -19,7 +19,7 @@ class StrippedStringField(StringField):
     def process_formdata(self, valuelist: list[Any]) -> None:
         """Override to implement the stripping."""
         if valuelist:
-            self.data = valuelist[0].strip()
+            self.data = valuelist[0].strip()  # pylint: disable=W0201
 
 
 class StrippedTextAreaField(TextAreaField):
@@ -28,7 +28,7 @@ class StrippedTextAreaField(TextAreaField):
     def process_formdata(self, valuelist: list[Any]) -> None:
         """Override to implement the stripping."""
         if valuelist:
-            self.data = valuelist[0].strip()
+            self.data = valuelist[0].strip()  # pylint: disable=W0201
 
 
 class InvoiceInfoForm(Form):
@@ -81,6 +81,7 @@ class InvoiceForm(Form):
 
     class Meta:
         """Settings for CSRF prevention."""
+        # pylint: disable=R0903
 
         csrf = True
         csrf_class = SessionCSRF
