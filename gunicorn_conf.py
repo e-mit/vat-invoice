@@ -8,7 +8,6 @@
 loglevel = "info"
 errorlog = "-"  # stderr
 accesslog = "-"  # stdout
-worker_tmp_dir = "/dev/shm"
 timeout = 0
 workers = 1
 threads = 8
