@@ -79,9 +79,8 @@ class InvoiceForm(Form):
     info = FormField(InvoiceInfoForm)
     items = FieldList(FormField(InvoiceItemForm), min_entries=1)
 
-    class Meta:
+    class Meta:  # pylint: disable=R0903
         """Settings for CSRF prevention."""
-        # pylint: disable=R0903
 
         csrf = True
         csrf_class = SessionCSRF
