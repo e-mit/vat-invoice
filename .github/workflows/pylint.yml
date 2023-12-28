@@ -14,8 +14,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Deploy frontend
-      uses: ./.github/actions/run-test-artifact
+    - name: Download and run docker image
+      uses: ./.github/actions/download-docker-artifact
       with:
         repo-read-token: ${{ secrets.GH_PAT }}
     - name: pylint
