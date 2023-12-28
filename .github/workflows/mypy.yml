@@ -12,16 +12,9 @@ jobs:
   mypy:
     runs-on: ubuntu-latest
     steps:
-    - name: Retrieve Docker image
-      uses: actions/download-artifact@v4
-      with:
-        name: test-build-${{ github.sha }}
-        run-id: ${{ github.event.workflow_run.id }}
-        github-token: ${{ secrets.GH_PAT }} # token with actions:read permissions on target repo
-    - name: Docker test run
-      run: |
-        docker load < test_image.tar
-        PORT=8000
-        docker run -td -p 8080:${PORT} --name test -e FLASK_LOG_LEVEL=DEBUG -e PORT=${PORT} --rm test:latest
-    - name: mypy
-      run: docker exec test python -m mypy . --exclude '/tests/'
+      - name: Deploy frontend
+        uses: ./.github/actions/run-test-artifact
+        with:
+          repo-read-token: ${{ secrets.GH_PAT }}
+      - name: mypy
+        run: docker exec test python -m mypy . --exclude '/tests/'
