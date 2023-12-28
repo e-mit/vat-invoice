@@ -21,7 +21,7 @@ def test_get_index(client) -> None:
     response = client.get("/")
     assert response.status_code == HTTP_SUCCESS
     assert flask_app.APP_TITLE in response.text
-    assert flask_app.open_in_new_tab == ('target="_blank"' in response.text)
+    assert flask_app.OPEN_IN_NEW_TAB == ('target="_blank"' in response.text)
     assert demo_values['info']['seller_name'] in response.text
 
 

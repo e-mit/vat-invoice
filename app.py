@@ -17,13 +17,13 @@ HTTP_INTERNAL_SERVER_ERROR = 500
 HTTP_NOT_FOUND = 404
 HTTP_CSRF_ERROR = 419
 
-open_print_dialog = False
-open_in_new_tab = False
-
 app = Flask(__name__)
 app.logger.setLevel(os.environ.get('FLASK_LOG_LEVEL', 'WARNING'))
 app.config["SECRET_KEY"] = os.environ.get('FLASK_SECRET_KEY',
                                           secrets.token_urlsafe(32))
+
+OPEN_PRINT_DIALOG = not app.config['DEBUG']
+OPEN_IN_NEW_TAB = not app.config['DEBUG']
 
 
 @app.get("/")
@@ -34,7 +34,7 @@ def index_get(form=None) -> str:
     app.logger.debug("Form data in index_get(): %s", form.data)
     return render_template("form.html", form=form,
                            title=APP_TITLE,
-                           open_in_new_tab=open_in_new_tab)
+                           open_in_new_tab=OPEN_IN_NEW_TAB)
 
 
 @app.post("/")
@@ -46,7 +46,7 @@ def index_post() -> str | tuple[str, int]:
         if form.validate():
             invoice = Invoice(form.data, "invoice.html")
             invoice.calculate_invoice()
-            return invoice.render(open_print_dialog)
+            return invoice.render(OPEN_PRINT_DIALOG)
         else:
             if form.csrf_token.errors:  # type: ignore
                 app.logger.warning('CSRF token error')
