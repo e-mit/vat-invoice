@@ -47,19 +47,18 @@ def index_post() -> str | tuple[str, int]:
             invoice = Invoice(form.data, "invoice.html")
             invoice.calculate_invoice()
             return invoice.render(OPEN_PRINT_DIALOG)
-        else:
-            if form.csrf_token.errors:  # type: ignore
-                app.logger.warning('CSRF token error')
-                return (render_template("error.html", title="CSRF error"),
-                        HTTP_CSRF_ERROR)
-            elif form.form_errors:
-                app.logger.error('Form consistency errors: %s',
-                                 form.form_errors)
-                abort(HTTP_UNPROCESSABLE_CONTENT)
-            elif form.errors:
-                app.logger.debug('Form field errors in: %s', form.data)
-                return index_get(form)
-    except Exception:
+        if form.csrf_token.errors:  # type: ignore
+            app.logger.warning('CSRF token error')
+            return (render_template("error.html", title="CSRF error"),
+                    HTTP_CSRF_ERROR)
+        if form.form_errors:
+            app.logger.error('Form consistency errors: %s',
+                             form.form_errors)
+            abort(HTTP_UNPROCESSABLE_CONTENT)
+        elif form.errors:
+            app.logger.debug('Form field errors in: %s', form.data)
+            return index_get(form)
+    except Exception:  # pylint: disable=broad-except
         app.logger.error('Exception while handling form: %s', request.form)
     abort(HTTP_INTERNAL_SERVER_ERROR)
 
@@ -68,7 +67,7 @@ def index_post() -> str | tuple[str, int]:
 def page_not_found_error(error) -> tuple[str, int]:
     """Customize page for HTTP_NOT_FOUND."""
     return (render_template("error.html", title="Page not found"),
-            HTTP_NOT_FOUND)
+            error.code)
 
 
 @app.errorhandler(HTTP_INTERNAL_SERVER_ERROR)
@@ -76,14 +75,14 @@ def internal_server_error(error) -> tuple[str, int]:
     """Customize page for HTTP_INTERNAL_SERVER_ERROR."""
     return (render_template("error.html", title=("An error occurred "
                             "while responding to your request.")),
-            HTTP_INTERNAL_SERVER_ERROR)
+            error.code)
 
 
 @app.errorhandler(HTTP_UNPROCESSABLE_CONTENT)
 def unprocessable_content_error(error) -> tuple[str, int]:
     """Customize page for HTTP_UNPROCESSABLE_CONTENT."""
     return (render_template("error.html", title="The form was inconsistent"),
-            HTTP_UNPROCESSABLE_CONTENT)
+            error.code)
 
 
 @app.errorhandler(HTTPException)
