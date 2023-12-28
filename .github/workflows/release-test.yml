@@ -24,4 +24,4 @@ jobs:
         docker run -d -p 8080:${PORT} --name release -e PORT=${PORT} --rm release:latest
         sleep 4
         page=$(curl http://127.0.0.1:8080)
-        if ! grep -q "VAT invoice deliberate_ERROR" <<< "$page"; then exit 1; fi
+        if ! grep -q "VAT invoice generator" <<< "$page"; then exit 1; fi
