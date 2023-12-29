@@ -17,7 +17,7 @@ jobs:
     - name: Wait for all workflows to pass
       run: |
         GITHUB_SHA=${{ github.sha }}
-        REPO_PATH=${{ github.repository }}
+        export REPO_PATH=${{ github.repository }}
         echo REPO_PATH = $REPO_PATH
         GH_TOKEN=${{ secrets.GH_PAT }}
         pip install -r requirements_test.txt
