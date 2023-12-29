@@ -20,11 +20,9 @@ jobs:
           repo-read-token: ${{ secrets.GH_PAT }}
       - name: bandit
         id: run
-        run: |
-          docker exec test python -m bandit -r . --exclude=/tests/
-          echo "RETURN_CODE=$?" >> $GITHUB_OUTPUT
+        run: docker exec test python -m bandit -r .
       - name: Save result
         if: always()
         uses: ./.github/actions/save-workflow-result
         with:
-          result: ${{ steps.run.outputs.RETURN_CODE }}
+          result: ${{ job.status }}
