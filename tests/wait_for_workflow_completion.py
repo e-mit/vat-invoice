@@ -12,8 +12,9 @@ TIMEOUT_SECONDS: int = 180
 PAUSE_SECONDS: int = 3
 GH_API_VERSION: str = "2022-11-28"
 ARTIFACT_FILENAME: str = "data.txt"
-PASS_RETURN_VALUE: str = '0'
-FAIL_RETURN_VALUE: str = '1'
+PASS_RETURN_VALUE: int = 0
+FAIL_RETURN_VALUE: int = 1
+WORKFLOW_SUCCESS: str = "success"
 
 GITHUB_SHA: str = os.environ['GITHUB_SHA']
 REPO_PATH: str = os.environ['REPO_PATH']
@@ -68,12 +69,12 @@ if __name__ == "__main__":
                         with ZipFile(BytesIO(data.content)) as z:
                             with TextIOWrapper(z.open(ARTIFACT_FILENAME),
                                                encoding="utf-8") as f:
-                                if f.read().strip() == PASS_RETURN_VALUE:
+                                if f.read().strip() == WORKFLOW_SUCCESS:
                                     passed_workflows.add(workflow['name'])
                                 else:
                                     failed_workflows.add(workflow['name'])
         if passed_workflows == required_workflows:
-            exit(int(PASS_RETURN_VALUE))
+            exit(PASS_RETURN_VALUE)
         if failed_workflows:
             break
         time.sleep(PAUSE_SECONDS)
@@ -83,4 +84,4 @@ if __name__ == "__main__":
                     - failed_workflows)  # type: ignore
     if not_reported:
         print(f"Workflows not reported: {not_reported}")
-    exit(int(FAIL_RETURN_VALUE))
+    exit(FAIL_RETURN_VALUE)
