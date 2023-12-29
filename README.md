@@ -1,6 +1,6 @@
 # VAT invoice generator
 
-![docker test build](https://github.com/e-mit/vat-invoice/actions/workflows/test_build.yml/badge.svg)
+![docker test build](https://github.com/e-mit/vat-invoice/actions/workflows/docker-test-build.yml/badge.svg)
 ![tests](https://github.com/e-mit/vat-invoice/actions/workflows/tests.yml/badge.svg)
 ![coverage](https://github.com/e-mit/vat-invoice/actions/workflows/coverage.yml/badge.svg)
 ![flake8](https://github.com/e-mit/vat-invoice/actions/workflows/flake8.yml/badge.svg)
@@ -10,7 +10,7 @@
 ![pylint](https://github.com/e-mit/vat-invoice/actions/workflows/pylint.yml/badge.svg)
 ![pyright](https://github.com/e-mit/vat-invoice/actions/workflows/pyright.yml/badge.svg)
 ![bandit](https://github.com/e-mit/vat-invoice/actions/workflows/bandit.yml/badge.svg)
-![docker release build](https://github.com/e-mit/vat-invoice/actions/workflows/release_build.yml/badge.svg)
+![docker release build](https://github.com/e-mit/vat-invoice/actions/workflows/docker-release-build.yml/badge.svg)
 ![release test](https://github.com/e-mit/vat-invoice/actions/workflows/release-test.yml/badge.svg)
 ![docker-hub-push](https://github.com/e-mit/vat-invoice/actions/workflows/docker-hub-push.yml/badge.svg)
 
