@@ -19,3 +19,7 @@ jobs:
         path: release_image.tar
         if-no-files-found: error
         retention-days: 1
+    - name: Save result
+      uses: ./.github/actions/save-workflow-result
+      with:
+        result: '0'

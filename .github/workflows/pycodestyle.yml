@@ -19,8 +19,12 @@ jobs:
       with:
         repo-read-token: ${{ secrets.GH_PAT }}
     - name: pycodestyle
-      run: docker exec test sh -c 'python -m pycodestyle *.py --exclude=tests/*'
+      id: run
+      run: |
+        docker exec test sh -c 'python -m pycodestyle *.py --exclude=tests/*'
+        echo "RETURN_CODE=$?" >> $GITHUB_OUTPUT
     - name: Save result
+      if: always()
       uses: ./.github/actions/save-workflow-result
       with:
-        result: '0'
+        result: ${{ steps.run.outputs.RETURN_CODE }}

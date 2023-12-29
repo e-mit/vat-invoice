@@ -19,9 +19,15 @@ jobs:
         repo-read-token: ${{ secrets.GH_PAT }}
         build-type: 'release'
     - name: Release test
+      id: run
       run: |
         PORT=8000
         docker run -d -p 8080:${PORT} --name release -e PORT=${PORT} --rm release:latest
         sleep 4
         page=$(curl http://127.0.0.1:8080)
         if ! grep -q "VAT invoice generator" <<< "$page"; then exit 1; fi
+    - name: Save result
+      if: always()
+      uses: ./.github/actions/save-workflow-result
+      with:
+        result: ${{ steps.run.outputs.RETURN_CODE }}

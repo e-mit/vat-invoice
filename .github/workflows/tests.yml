@@ -19,8 +19,11 @@ jobs:
       with:
         repo-read-token: ${{ secrets.GH_PAT }}
     - name: Tests
-      run: docker exec test python -m pytest -p no:cacheprovider
+      id: run
+      run: |
+        docker exec test python -m pytest -p no:cacheprovider
     - name: Save result
+      if: always()
       uses: ./.github/actions/save-workflow-result
       with:
-        result: '1'
+        result: ${{ job.status }}

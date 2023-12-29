@@ -19,4 +19,12 @@ jobs:
         with:
           repo-read-token: ${{ secrets.GH_PAT }}
       - name: mypy
-        run: docker exec test python -m mypy . --exclude '/tests/'
+        id: run
+        run: |
+          docker exec test python -m mypy . --exclude '/tests/'
+          echo "RETURN_CODE=$?" >> $GITHUB_OUTPUT
+      - name: Save result
+        if: always()
+        uses: ./.github/actions/save-workflow-result
+        with:
+          result: ${{ steps.run.outputs.RETURN_CODE }}
