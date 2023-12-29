@@ -3,13 +3,12 @@ name: docker-hub-push
 on:
   workflow_run:
     workflows:
-      - release-test
+      - docker-release-build
     types:
       - completed
 
 jobs:
   push:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
