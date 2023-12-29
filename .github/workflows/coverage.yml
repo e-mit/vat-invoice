@@ -21,7 +21,6 @@ jobs:
     - name: Coverage error check
       run: docker exec test python -m pytest --cov tests -p no:cacheprovider
     - name: Coverage percentage check
-      id: run
       run: |
         target_coverage_pc=90
         coverage_pc=$(docker exec test python -m pytest --cov tests -p no:cacheprovider | awk '$1 == "TOTAL" {print $NF+0}')
@@ -31,4 +30,4 @@ jobs:
       if: always()
       uses: ./.github/actions/save-workflow-result
       with:
-        result: ${{ steps.run.outputs.RETURN_CODE }}
+        result: ${{ job.status }}

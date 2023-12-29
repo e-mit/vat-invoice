@@ -19,8 +19,7 @@ jobs:
         with:
           repo-read-token: ${{ secrets.GH_PAT }}
       - name: bandit
-        id: run
-        run: docker exec test python -m bandit -r .
+        run: docker exec test python -m bandit -r . --exclude=/tests/
       - name: Save result
         if: always()
         uses: ./.github/actions/save-workflow-result

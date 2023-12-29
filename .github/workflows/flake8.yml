@@ -19,7 +19,6 @@ jobs:
       with:
         repo-read-token: ${{ secrets.GH_PAT }}
     - name: flake8
-      id: run
       run: docker exec test python -m flake8 --exclude=tests/*
     - name: Save result
       if: always()
