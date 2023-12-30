@@ -13,6 +13,7 @@
 ![docker release build](https://github.com/e-mit/vat-invoice/actions/workflows/docker-release-build.yml/badge.svg)
 ![release test](https://github.com/e-mit/vat-invoice/actions/workflows/release-test.yml/badge.svg)
 ![docker-hub-push](https://github.com/e-mit/vat-invoice/actions/workflows/docker-hub-push.yml/badge.svg)
+![google-cloud-deploy](https://github.com/e-mit/vat-invoice/actions/workflows/google-cloud-deploy.yml/badge.svg)
 
 A Python web application for creating VAT invoices.
 

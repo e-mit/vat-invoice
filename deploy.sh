@@ -1,5 +1,7 @@
-docker push emit5/vat-invoice:latest
+docker tag release:latest emit5/vat-invoice:{sha}
 
-gcloud config set project vat-invoice
+docker push emit5/vat-invoice:{sha}
 
-gcloud run deploy vat-invoice-service --image emit5/vat-invoice:latest --allow-unauthenticated --region=europe-west1
+gcloud auth activate-service-account vat-invoice-uploader@vat-invoice.iam.gserviceaccount.com --key-file=/path/key.json --project=vat-invoice
+
+gcloud run deploy vat-invoice-service --image emit5/vat-invoice:{sha} --allow-unauthenticated --region=europe-west1 --cpu-boost --session-affinity

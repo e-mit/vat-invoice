@@ -19,7 +19,7 @@ jobs:
         export REPO_PATH=${{ github.repository }}
         export GH_TOKEN=${{ secrets.GH_PAT }}
         pip install -r requirements_test.txt
-        python tests/wait_for_workflow_completion.py ${{ github.workflow }}
+        python tests/wait_for_workflow_completion.py google-cloud-deploy docker-hub-push
     - name: Download docker image artifact
       uses: ./.github/actions/download-docker-artifact
       with:
