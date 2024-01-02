@@ -42,7 +42,7 @@ textarea, input {
 
 form {
   display: grid;
-  grid-template-columns: 9rem min(15rem,45%) 1fr;
+  grid-template-columns: 9rem min(15rem, calc(100% - 9rem)) 1fr;
 }
 
 form > label {
