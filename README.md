@@ -24,7 +24,7 @@ This project uses Flask, WTForms and Docker. [Try the example deployment on Goog
 ### Readme Contents
 
 - **[Development and testing](#development-and-testing)**<br>
-- **[Deployment](#deployment)**<br>
+- **[Deployment](#continuous-deployment)**<br>
 - **[License](#license)**<br>
 
 
@@ -42,7 +42,7 @@ During development:
 
 If all workflows on the test image have passed, the SHA256 of the newly-built release image is compared with the most recent [image on Docker Hub](https://hub.docker.com/r/emit5/vat-invoice). If the hash has changed, the new image is pushed to Docker Hub and deployed to Google Cloud Run as a new revision.
 
-The triggering commit for new release images must be tagged (with a semantic version), else this process will fail and no push/deployment occurs.
+The triggering commit for new release images must be tagged (with a semantic version), else this process will cancel and no push/deployment occurs.
 
 ## License
 
