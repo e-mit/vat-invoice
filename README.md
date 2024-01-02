@@ -25,17 +25,18 @@ This project uses Flask, WTForms and Docker. [Try the example deployment on Goog
 
 - **[Development and testing](#development-and-testing)**<br>
 - **[Deployment](#deployment)**<br>
-- **[Changelog](#changelog)**<br>
 - **[License](#license)**<br>
 
 
 ## Development and testing
 
-The Dockerfile has two targets: test and release. The release target is designed to avoid the inclusion of test files/packages in its hidden layers.
+The Dockerfile has two targets: test and release. The release target avoids the inclusion of test files/packages in its hidden layers.
 
-Tests and linting checks run in the test container with GitHub actions. The release image is tagged with the commit hash.
+Tests and linting checks run via GitHub actions in the test container. The release image is tagged with the commit hash.
 
-Run all tests locally during development with ```build_and_test.sh``` and try the release version locally at ```127.0.0.1:8080``` with ```release_run.sh```.
+During development:
+- Run all tests locally with ```build_and_test.sh```
+- Try the release version locally at ```127.0.0.1:8080``` with ```release_run.sh```
 
 ## Continuous deployment
 
