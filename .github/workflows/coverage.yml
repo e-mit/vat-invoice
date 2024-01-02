@@ -19,7 +19,7 @@ jobs:
       with:
         repo-read-token: ${{ secrets.GH_PAT }}
     - name: Coverage error check
-      run: docker exec test python -m pytest --cov tests -p no:cacheprovider
+      run: docker exec test python -m pytest --cov=. tests -p no:cacheprovider
     - name: Coverage percentage check
       run: |
         target_coverage_pc=90
