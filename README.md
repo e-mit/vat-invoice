@@ -19,6 +19,7 @@ A Python web application for creating VAT invoices.
 
 This project uses Flask, WTForms and Docker. [Try the example deployment on Google Cloud Run.](https://vat-invoice-service-uzzizxhvgq-ew.a.run.app/)
 
+[Docker Hub image repository](https://hub.docker.com/r/emit5/vat-invoice)
 
 ### Readme Contents
 
@@ -30,18 +31,17 @@ This project uses Flask, WTForms and Docker. [Try the example deployment on Goog
 
 ## Development and testing
 
-TODO
+The Dockerfile has two targets: test and release. The release target is designed to avoid the inclusion of test files/packages in its hidden layers.
 
+Tests and linting checks run in the test container with GitHub actions. The release image is tagged with the commit hash.
 
-## Deployment
+Run all tests locally during development with ```build_and_test.sh``` and try the release version locally at ```127.0.0.1:8080``` with ```release_run.sh```.
 
-TODO
+## Continuous deployment
 
+If all workflows on the test image have passed, the SHA256 of the newly-built release image is compared with the most recent [image on Docker Hub](https://hub.docker.com/r/emit5/vat-invoice). If the hash has changed, the new image is pushed to Docker Hub and deployed to Google Cloud Run as a new revision.
 
-## Changelog
-
-Changes, fixes and additions in each software release version are listed in the [CHANGELOG](CHANGELOG.md)
-
+The triggering commit for new release images must be tagged (with a semantic version), else this process will fail and no push/deployment occurs.
 
 ## License
 
