@@ -13,6 +13,48 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Check for commit tag
+      id: version-tag-check
+      run: |
+        ref=${{ github.ref }}
+        echo Tag = $ref
+        HAS_TAG=0
+        if [[ $ref == refs/tags/v* ]]; then HAS_TAG=1; fi
+        echo "HAS_TAG=$HAS_TAG" >> $GITHUB_OUTPUT
+    - name: Download docker image artifact
+      uses: ./.github/actions/download-docker-artifact
+      with:
+        repo-read-token: ${{ secrets.GH_PAT }}
+        build-type: 'release'
+    - name: Check the image SHA256 against the latest on Docker Hub
+      id: sha-check
+      run: |
+        new_sha=$(docker images --no-trunc --quiet release:latest)
+        echo $new_sha
+        latest_data=$(curl "https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}/tags?page_size=1")
+        NEW_IMG=1
+        if grep -q $new_sha <<< "$latest_data"; then NEW_IMG=0; fi
+        echo "NEW_IMG=$NEW_IMG" >> $GITHUB_OUTPUT
+    - name: Tag present but image has not changed
+      if: ${{ steps.version-tag-check.outputs.HAS_TAG == 1 }} and ${{ steps.sha-check.outputs.NEW_IMG == 0 }}
+      run: |
+        echo "Error: tag present but image has not changed"
+        exit 1
+    - name: Tag missing but image has changed
+      if: ${{ steps.version-tag-check.outputs.HAS_TAG == 0 }} and ${{ steps.sha-check.outputs.NEW_IMG == 1 }}
+      run: |
+        echo "Error: tag missing but image has changed"
+        exit 2
+    - name: No tag and image has not changed
+      if: ${{ steps.version-tag-check.outputs.HAS_TAG == 0 }} and ${{ steps.sha-check.outputs.NEW_IMG == 0 }}
+      run: |
+        echo "Image has not changed: cancel the push and the deployment"
+        gh run cancel ${{ github.run_id }}
+        gh run watch ${{ github.run_id }}
+    - name: Tag present and image has changed
+      if: ${{ steps.version-tag-check.outputs.HAS_TAG == 1 }} and ${{ steps.sha-check.outputs.NEW_IMG == 1 }}
+      run: echo "Proceeding with Dockerhub push and cloud deployment."
+
     - name: Wait for all workflows to pass
       run: |
         export GITHUB_SHA=${{ github.sha }}
@@ -20,11 +62,6 @@ jobs:
         export GH_TOKEN=${{ secrets.GH_PAT }}
         pip install -r requirements_test.txt
         python tests/wait_for_workflow_completion.py google-cloud-deploy docker-hub-push
-    - name: Download docker image artifact
-      uses: ./.github/actions/download-docker-artifact
-      with:
-        repo-read-token: ${{ secrets.GH_PAT }}
-        build-type: 'release'
     - name: Log in to Docker Hub
       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
       with:

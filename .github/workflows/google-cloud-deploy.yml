@@ -8,6 +8,12 @@ on:
       - completed
 
 jobs:
+  pushprint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: printout
+      run: echo Push.conclusion = ${{ github.event.workflow_run.conclusion }}
+
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest

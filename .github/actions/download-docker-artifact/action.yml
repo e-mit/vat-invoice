@@ -29,5 +29,4 @@ runs:
   - name: Docker release load
     if: ${{ inputs.build-type == 'release' }}
     shell: bash
-    run: |
-      docker load < release_image.tar
+    run: docker load < release_image.tar
