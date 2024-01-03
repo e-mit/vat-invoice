@@ -34,15 +34,15 @@ The Dockerfile has two targets: test and release. The release target avoids the 
 
 Tests and linting checks run via GitHub actions, in the test container, after each push.
 
-During development:
-- Run all tests locally with ```build_and_test.sh```
-- Try the release version locally at ```127.0.0.1:8080``` with ```release_run.sh```
+During local development:
+- Run all tests with ```build_and_test.sh```
+- Try the release version at ```127.0.0.1:8080``` with ```release_run.sh```
 
 ## Continuous deployment
 
 If all workflows on the test image have passed, and if the commit was tagged with a version, the new release image is pushed to Docker Hub and deployed to Google Cloud Run as a new revision.
 
-The release image is tagged with the commit hash.
+The release image on Docker Hub is tagged with the commit hash. The ```/version``` route serves a json string giving the version tag and the commit hash.
 
 ## License
 
