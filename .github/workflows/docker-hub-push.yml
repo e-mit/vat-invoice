@@ -3,15 +3,20 @@ name: docker-hub-push
 on:
   workflow_run:
     workflows:
-      - docker-release-build
+      - tag-check
     types:
       - completed
 
 jobs:
-  push:
+  checkprint:
     runs-on: ubuntu-latest
-    permissions:
-      actions: 'write'
+    steps:
+    - name: printout
+      run: echo Push.conclusion = ${{ github.event.workflow_run.conclusion }}
+
+  push:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -20,31 +25,13 @@ jobs:
       with:
           repo-read-token: ${{ secrets.GH_PAT }}
           build-type: 'release'
-    - name: Check for commit tag
-      env:
-        GH_TOKEN: ${{ secrets.GH_PAT }}
-      run: |
-        PORT=8000
-        docker run -d -p 8080:${PORT} --name release -e PORT=${PORT} --rm release:latest
-        sleep 4
-        json_data=$(curl http://127.0.0.1:8080/version)
-        git_tag=$(echo $json_data | python3 -c "import sys, json; print(json.load(sys.stdin)['version'])")
-        echo Tag = $git_tag
-        if [[ $git_tag != v* ]]
-        then
-          echo "Commit was not version tagged: cancel push/deploy."
-          gh run cancel ${{ github.run_id }}
-          gh run watch ${{ github.run_id }}
-        else
-          echo "Proceeding with DockerHub push and cloud deployment."
-        fi
     - name: Wait for all workflows to pass
       run: |
         export GITHUB_SHA=${{ github.sha }}
         export REPO_PATH=${{ github.repository }}
         export GH_TOKEN=${{ secrets.GH_PAT }}
         pip install -r requirements_test.txt
-        python tests/wait_for_workflow_completion.py google-cloud-deploy docker-hub-push
+        python tests/wait_for_workflow_completion.py google-cloud-deploy docker-hub-push tag-check
     - name: Log in to Docker Hub
       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
       with:
