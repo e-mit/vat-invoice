@@ -36,23 +36,23 @@ jobs:
         if grep -q $new_sha <<< "$latest_data"; then NEW_IMG=0; fi
         echo "NEW_IMG=$NEW_IMG" >> $GITHUB_OUTPUT
     - name: Tag present but image has not changed
-      if: ${{ steps.version-tag-check.outputs.HAS_TAG == 1 }} and ${{ steps.sha-check.outputs.NEW_IMG == 0 }}
+      if: ${{ steps.version-tag-check.outputs.HAS_TAG == '1' }} and ${{ steps.sha-check.outputs.NEW_IMG == '0' }}
       run: |
         echo "Error: tag present but image has not changed"
         exit 1
     - name: Tag missing but image has changed
-      if: ${{ steps.version-tag-check.outputs.HAS_TAG == 0 }} and ${{ steps.sha-check.outputs.NEW_IMG == 1 }}
+      if: ${{ steps.version-tag-check.outputs.HAS_TAG == '0' }} and ${{ steps.sha-check.outputs.NEW_IMG == '1' }}
       run: |
         echo "Error: tag missing but image has changed"
         exit 2
     - name: No tag and image has not changed
-      if: ${{ steps.version-tag-check.outputs.HAS_TAG == 0 }} and ${{ steps.sha-check.outputs.NEW_IMG == 0 }}
+      if: ${{ steps.version-tag-check.outputs.HAS_TAG == '0' }} and ${{ steps.sha-check.outputs.NEW_IMG == '0' }}
       run: |
         echo "Image has not changed: cancel the push and the deployment"
         gh run cancel ${{ github.run_id }}
         gh run watch ${{ github.run_id }}
     - name: Tag present and image has changed
-      if: ${{ steps.version-tag-check.outputs.HAS_TAG == 1 }} and ${{ steps.sha-check.outputs.NEW_IMG == 1 }}
+      if: ${{ steps.version-tag-check.outputs.HAS_TAG == '1' }} and ${{ steps.sha-check.outputs.NEW_IMG == '1' }}
       run: echo "Proceeding with Dockerhub push and cloud deployment."
 
     - name: Wait for all workflows to pass
