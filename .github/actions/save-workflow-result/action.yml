@@ -13,7 +13,7 @@ runs:
     shell: bash
     run: echo ${{ inputs.result }} >> data.txt
   - name: Save result file
-    uses: actions/upload-artifact@v4
+    uses: actions/upload-artifact@v3
     with:
       name: ${{ github.workflow }}_${{ github.sha }}
       path: data.txt
