@@ -15,6 +15,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Download docker image artifact
+      uses: ./.github/actions/download-docker-artifact
+      with:
+          repo-read-token: ${{ secrets.GH_PAT }}
+          build-type: 'release'
     - name: Check for commit tag
       env:
         GH_TOKEN: ${{ secrets.GH_PAT }}
@@ -40,11 +45,6 @@ jobs:
         export GH_TOKEN=${{ secrets.GH_PAT }}
         pip install -r requirements_test.txt
         python tests/wait_for_workflow_completion.py google-cloud-deploy docker-hub-push
-    - name: Download docker image artifact
-      uses: ./.github/actions/download-docker-artifact
-      with:
-          repo-read-token: ${{ secrets.GH_PAT }}
-          build-type: 'release'
     - name: Log in to Docker Hub
       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
       with:
