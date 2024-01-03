@@ -1,6 +1,11 @@
 name: docker-hub-push
 
-on: [push]
+on:
+  workflow_run:
+    workflows:
+      - docker-release-build
+    types:
+      - completed
 
 jobs:
   push:
@@ -10,18 +15,15 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Wait for all workflows to pass
-      run: |
-        export GITHUB_SHA=${{ github.sha }}
-        export REPO_PATH=${{ github.repository }}
-        export GH_TOKEN=${{ secrets.GH_PAT }}
-        pip install -r requirements_test.txt
-        python tests/wait_for_workflow_completion.py google-cloud-deploy docker-hub-push
     - name: Check for commit tag
       env:
         GH_TOKEN: ${{ secrets.GH_PAT }}
       run: |
-        git_tag=$(git tag --points-at HEAD)
+        PORT=8000
+        docker run -d -p 8080:${PORT} --name release -e PORT=${PORT} --rm release:latest
+        sleep 4
+        json_data=$(curl http://127.0.0.1:8080/version)
+        git_tag=$(echo $json_data | python3 -c "import sys, json; print(json.load(sys.stdin)['version'])")
         echo Tag = $git_tag
         if [[ $git_tag != v* ]]
         then
@@ -31,6 +33,13 @@ jobs:
         else
           echo "Proceeding with DockerHub push and cloud deployment."
         fi
+    - name: Wait for all workflows to pass
+      run: |
+        export GITHUB_SHA=${{ github.sha }}
+        export REPO_PATH=${{ github.repository }}
+        export GH_TOKEN=${{ secrets.GH_PAT }}
+        pip install -r requirements_test.txt
+        python tests/wait_for_workflow_completion.py google-cloud-deploy docker-hub-push
     - name: Download docker image artifact
       uses: ./.github/actions/download-docker-artifact
       with:
