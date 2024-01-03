@@ -14,10 +14,11 @@ runs:
   using: "composite"
   steps:
   - name: Retrieve Docker image
-    uses: actions/download-artifact@v3
+    uses: actions/download-artifact@v4
     with:
       name: ${{ inputs.build-type }}-build-${{ github.sha }}
-      path: ${{ inputs.build-type }}-build-${{ github.sha }}
+      run-id: ${{ github.event.workflow_run.id }}
+      github-token: ${{ inputs.repo-read-token }}
   - name: Docker test run
     if: ${{ inputs.build-type == 'test' }}
     shell: bash
