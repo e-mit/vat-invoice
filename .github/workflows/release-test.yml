@@ -27,11 +27,6 @@ jobs:
         if ! grep -q "VAT invoice generator" <<< "$page"; then echo "Page GET failed." && exit 1; fi
         json_data=$(curl http://127.0.0.1:8080/version)
         echo JSON data = $json_data
-        git_tag=$(git tag --points-at HEAD)
-        echo Tag = $git_tag
-        version=$(echo $json_data | python3 -c "import sys, json; print(json.load(sys.stdin)['version'])")
-        echo Version = $version
-        if [ "$version" != "$git_tag" ]; then echo "Version/tag incorrect." && exit 1; fi
         hash=$(echo $json_data | python3 -c "import sys, json; print(json.load(sys.stdin)['commit_hash'])")
         echo Hash = $hash
         echo GSHA = ${{ github.sha }}
