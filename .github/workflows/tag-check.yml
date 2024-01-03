@@ -38,3 +38,10 @@ jobs:
         else
           echo "Proceeding with DockerHub push and cloud deployment."
         fi
+    - name: Re-save image for chained workflow_run
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-build-${{ github.sha }}
+        path: release_image.tar
+        if-no-files-found: error
+        retention-days: 1
