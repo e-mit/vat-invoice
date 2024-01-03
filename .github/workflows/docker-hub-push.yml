@@ -16,10 +16,10 @@ jobs:
     - name: Check for commit tag
       id: version-tag-check
       run: |
-        ref=${{ github.ref }}
-        echo Tag = $ref
+        git_tag=$(git tag --points-at HEAD)
+        echo Tag = $git_tag
         HAS_TAG=0
-        if [[ $ref == refs/tags/v* ]]; then HAS_TAG=1; fi
+        if [[ $git_tag == v* ]]; then HAS_TAG=1; fi
         echo "HAS_TAG=$HAS_TAG" >> $GITHUB_OUTPUT
     - name: Download docker image artifact
       uses: ./.github/actions/download-docker-artifact
