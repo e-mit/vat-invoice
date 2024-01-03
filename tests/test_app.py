@@ -30,7 +30,8 @@ def test_get_version(client) -> None:
     assert response.status_code == HTTP_SUCCESS
     data = response.get_json()
     assert data["version"] == config.VERSION
-    assert "timestamp" in data
+    assert data["commit_hash"] == config.COMMIT_HASH
+    assert "timestamp_now" in data
 
 
 def test_get_version_slash(client) -> None:

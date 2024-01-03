@@ -98,5 +98,6 @@ def version() -> Response:
     """Check version and server response in a simple way."""
     return jsonify({
         "version": config.VERSION,
-        "timestamp": str(datetime.now())
+        "commit_hash": config.COMMIT_HASH,
+        "timestamp_now": str(datetime.now())
     })

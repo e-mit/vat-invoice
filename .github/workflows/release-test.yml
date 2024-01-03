@@ -24,7 +24,13 @@ jobs:
         docker run -d -p 8080:${PORT} --name release -e PORT=${PORT} --rm release:latest
         sleep 4
         page=$(curl http://127.0.0.1:8080)
-        if ! grep -q "VAT invoice generator" <<< "$page"; then exit 1; fi
+        if ! grep -q "VAT invoice generator" <<< "$page"; then echo "Page GET failed." && exit 1; fi
+        json_data=$(curl http://127.0.0.1:8080/version)
+        git_tag=$(git tag --points-at HEAD)
+        version=$(echo $json_data | python3 -c "import sys, json; print(json.load(sys.stdin)['version'])")
+        if [ $version != $git_tag ]; then echo "Version/tag incorrect." && exit 1; fi
+        hash=$(echo $json_data | python3 -c "import sys, json; print(json.load(sys.stdin)['commit_hash'])")
+        if [ $hash != ${{ github.sha }} ]; then echo "Commit hash incorrect." && exit 1; fi
     - name: Save result
       if: always()
       uses: ./.github/actions/save-workflow-result

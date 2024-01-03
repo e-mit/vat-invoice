@@ -23,7 +23,7 @@ jobs:
         echo Tag = $git_tag
         if [[ $git_tag != v* ]]
         then
-          echo "Commit was not tagged: cancel push/deploy."
+          echo "Commit was not version tagged: cancel push/deploy."
           gh run cancel ${{ github.run_id }}
           gh run watch ${{ github.run_id }}
         else

@@ -1,2 +1,3 @@
-"""Configuration for app."""
-VERSION = "0.1"
+"""Versioning for app."""
+VERSION = "n/a"
+COMMIT_HASH = "n/a"

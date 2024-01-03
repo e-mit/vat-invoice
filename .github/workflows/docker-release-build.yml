@@ -10,6 +10,11 @@ jobs:
       uses: actions/checkout@v4
     - name: Docker release build
       run: |
+        config_file=config.py
+        echo '"""Versioning for app."""' > $config_file
+        git_tag=$(git tag --points-at HEAD)
+        echo VERSION = \"$git_tag\" >> $config_file
+        echo COMMIT_HASH = \"${{ github.sha }}\" >> $config_file
         docker build --target release -t release:latest .
         docker save release:latest > release_image.tar
     - name: Save image
