@@ -32,7 +32,7 @@ This project uses Flask, WTForms and Docker. [Try the example deployment on Goog
 
 The Dockerfile has two targets: test and release. The release target avoids the inclusion of test files/packages in its hidden layers.
 
-Tests and linting checks run via GitHub actions in the test container. The release image is tagged with the commit hash.
+Tests and linting checks run via GitHub actions, in the test container, after each push.
 
 During development:
 - Run all tests locally with ```build_and_test.sh```
@@ -40,9 +40,9 @@ During development:
 
 ## Continuous deployment
 
-If all workflows on the test image have passed, the SHA256 of the newly-built release image is compared with the most recent [image on Docker Hub](https://hub.docker.com/r/emit5/vat-invoice). If the hash has changed, the new image is pushed to Docker Hub and deployed to Google Cloud Run as a new revision.
+If all workflows on the test image have passed, and if the commit was tagged with a version, the new release image is pushed to Docker Hub and deployed to Google Cloud Run as a new revision.
 
-The triggering commit for new release images must be tagged (with a semantic version), else this process will cancel and no push/deployment occurs.
+The release image is tagged with the commit hash.
 
 ## License
 
