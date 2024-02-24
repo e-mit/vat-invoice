@@ -59,9 +59,22 @@ function removeAllAddedRows() {
 }
 
 function clearForm() {
+    clearErrors();
     let elements = Array.from(document.getElementById("invoice-form").getElementsByClassName("clearable"));
     for (let i = 0; i < elements.length; i++) {
         elements[i].value = "";
     }
     removeAllAddedRows();
+}
+
+function clearErrors() {
+    let elements = Array.from(document.getElementsByClassName("error-string"));
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].remove()
+    }
+}
+
+function submitForm() {
+    clearErrors();
+    document.getElementById("invoice-form").submit();
 }
