@@ -22,6 +22,7 @@ HTTP_CSRF_ERROR = 419
 
 app = Flask(__name__)
 app.logger.setLevel(os.environ.get('FLASK_LOG_LEVEL', 'WARNING'))
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config["SECRET_KEY"] = os.environ.get('FLASK_SECRET_KEY',
                                           secrets.token_urlsafe(32))
 
