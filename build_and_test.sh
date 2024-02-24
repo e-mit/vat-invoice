@@ -1,3 +1,5 @@
+#!/bin/sh
+
 docker build --target test -t test:latest .
 
 # The -td forces the container to keep running without any CMD, and as a daemon
