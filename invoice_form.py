@@ -1,8 +1,10 @@
 """Define the form object(s) which pass data between front and back ends."""
+
 import secrets
 import os
 from datetime import timedelta
 from typing import Any
+
 from flask import session
 from wtforms import Form, DateField, StringField, validators, FieldList
 from wtforms import DecimalField, IntegerField, TextAreaField, FormField
@@ -13,45 +15,44 @@ CSRF_SECRET = str.encode(os.environ.get('CSRF_SECRET',
                                         secrets.token_urlsafe(32)))
 
 
-class StrippedStringField(StringField):
+class StrippedMixin:  # pylint: disable=R0903
+    """A mixin to strip leading/trailing whitespace in WTForms strings."""
+
+    def process_formdata(self, valuelist: list[Any]) -> None:
+        """Override to implement the stripping."""
+        if valuelist:
+            self.data = valuelist[0].strip()  # pylint: disable=W0201
+
+
+class StripStringField(StrippedMixin, StringField):  # pylint: disable=R0903
     """A WTForms StringField which strips leading/trailing whitespace."""
 
-    def process_formdata(self, valuelist: list[Any]) -> None:
-        """Override to implement the stripping."""
-        if valuelist:
-            self.data = valuelist[0].strip()  # pylint: disable=W0201
 
-
-class StrippedTextAreaField(TextAreaField):
+class StripTextField(StrippedMixin, TextAreaField):  # pylint: disable=R0903
     """A WTForms TextAreaField which strips leading/trailing whitespace."""
-
-    def process_formdata(self, valuelist: list[Any]) -> None:
-        """Override to implement the stripping."""
-        if valuelist:
-            self.data = valuelist[0].strip()  # pylint: disable=W0201
 
 
 class InvoiceInfoForm(Form):
     """General information, not concerning sold product/items."""
 
-    invoice_number = StrippedStringField('Invoice number',
-                                         [validators.DataRequired()])
+    invoice_number = StripStringField('Invoice number',
+                                      [validators.DataRequired()])
     invoice_date = DateField('Invoice date', [validators.InputRequired()])
-    currency_code = StrippedStringField('Currency code',
-                                        [validators.DataRequired()])
+    currency_code = StripStringField('Currency code',
+                                     [validators.DataRequired()])
     vat_percent = DecimalField('VAT rate (%)', [validators.InputRequired(),
                                                 validators.NumberRange(
                                                     min=0, max=100)],
                                places=None)
-    seller_name = StrippedStringField('Seller name',
-                                      [validators.DataRequired()])
-    seller_vat_number = StrippedStringField('Seller VAT number',
-                                            [validators.DataRequired()],
-                                            filters=[str.upper])
-    seller_address = StrippedTextAreaField('Seller address',
-                                           [validators.DataRequired()])
-    buyer_address = StrippedTextAreaField('Buyer name and address (optional)',
-                                          [validators.Optional()])
+    seller_name = StripStringField('Seller name',
+                                   [validators.DataRequired()])
+    seller_vat_number = StripStringField('Seller VAT number',
+                                         [validators.DataRequired()],
+                                         filters=[str.upper])
+    seller_address = StripTextField('Seller address',
+                                    [validators.DataRequired()])
+    buyer_address = StripTextField('Buyer name and address (optional)',
+                                   [validators.Optional()])
 
     def validate_seller_vat_number(self, field: Field) -> None:
         """Do not attempt a proper validation but check for country prefix."""
@@ -63,8 +64,8 @@ class InvoiceInfoForm(Form):
 class InvoiceItemForm(Form):
     """Information for one product/item line on the invoice."""
 
-    description = StrippedStringField('Description',
-                                      [validators.DataRequired()])
+    description = StripStringField('Description',
+                                   [validators.DataRequired()])
     unit_price = DecimalField('Unit price ex. VAT',
                               [validators.InputRequired(),
                                validators.NumberRange(min=0)],
