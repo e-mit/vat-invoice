@@ -1,8 +1,10 @@
 """Objects for generating the output invoice document."""
+
 import decimal
 from decimal import Decimal
 from typing import Any
 from copy import deepcopy
+
 from jinja2 import Environment, FileSystemLoader
 
 

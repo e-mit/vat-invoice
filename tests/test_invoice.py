@@ -1,8 +1,11 @@
 """Tests for invoice.py"""
+
+from decimal import Decimal
+
 import pytest
+
 from invoice import Invoice
 import demo_values as demo
-from decimal import Decimal
 
 
 def test_split_address():

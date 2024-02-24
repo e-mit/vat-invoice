@@ -1,8 +1,11 @@
 """Tests for app.py. Note: run with pytest --log-cli-level=DEBUG."""
+
 from datetime import datetime, timezone, timedelta
+
 from flask.testing import FlaskClient
-from app import app
 import pytest
+
+from app import app
 import app as flask_app
 import config
 from demo_values import demo_values

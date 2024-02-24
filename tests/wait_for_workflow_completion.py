@@ -1,9 +1,10 @@
 """Gather the results of all GitHub action workflows, or timeout."""
-from pathlib import Path
+
 import os
 import sys
 import time
 from typing import Any
+from pathlib import Path
 from io import BytesIO, TextIOWrapper
 from zipfile import ZipFile
 import requests

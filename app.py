@@ -1,10 +1,13 @@
 """A Flask app for creating VAT invoices."""
+
 import secrets
 import os
 from datetime import datetime, timezone
+
 from flask import Flask, render_template, request
 from flask import jsonify, Response, abort
 from werkzeug.exceptions import HTTPException
+
 from invoice_form import InvoiceForm
 from demo_values import demo_values
 from invoice import Invoice

@@ -1,14 +1,17 @@
 """Tests for invoice_form.py"""
-from flask.testing import FlaskClient
-from app import app
-import pytest
-from demo_values import demo_values
-from werkzeug.datastructures import MultiDict
+
 from typing import Any
-from bs4 import BeautifulSoup
-from invoice_form import InvoiceForm
 from decimal import Decimal
 from copy import deepcopy
+
+from flask.testing import FlaskClient
+import pytest
+from werkzeug.datastructures import MultiDict
+from bs4 import BeautifulSoup
+
+from app import app
+from demo_values import demo_values
+from invoice_form import InvoiceForm
 
 
 def add_md(name: str, obj: Any, md: MultiDict) -> None:
