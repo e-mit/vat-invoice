@@ -19,7 +19,7 @@ jobs:
       with:
         repo-read-token: ${{ secrets.GH_PAT }}
     - name: flake8
-      run: docker exec test python -m flake8 --exclude=tests/*
+      run: docker exec test python -m flake8 --exclude=tests/*,venv/*
     - name: Save result
       if: always()
       uses: ./.github/actions/save-workflow-result

@@ -19,7 +19,7 @@ jobs:
       with:
         repo-read-token: ${{ secrets.GH_PAT }}
     - name: pydocstyle
-      run: docker exec test python -m pydocstyle $(find . -path . -prune -o -name '*.py' -print) --ignore=D107,D203,D213
+      run: docker exec test sh -c 'python -m pydocstyle $(ls *.py) --ignore=D107,D203,D213'
     - name: Save result
       if: always()
       uses: ./.github/actions/save-workflow-result

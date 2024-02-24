@@ -19,7 +19,7 @@ jobs:
       with:
         repo-read-token: ${{ secrets.GH_PAT }}
     - name: pylint
-      run: docker exec test python -m pylint *.py
+      run: docker exec test sh -c 'python -m pylint *.py'
     - name: Save result
       if: always()
       uses: ./.github/actions/save-workflow-result

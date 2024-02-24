@@ -19,7 +19,7 @@ jobs:
       with:
         repo-read-token: ${{ secrets.GH_PAT }}
     - name: pyright
-      run: docker exec test python -m pyright *.py
+      run: docker exec test sh -c 'python -m pyright *.py'
     - name: Save result
       if: always()
       uses: ./.github/actions/save-workflow-result

@@ -10,6 +10,9 @@ ENV PYTHONUNBUFFERED=1
 RUN apt-get update && apt-get install -y openssl
 RUN rm -rf /var/cache/apt/lists
 
+RUN python -m venv venv
+ENV PATH="/app/venv/bin:$PATH"
+
 RUN pip install --no-cache-dir --upgrade pip
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
@@ -30,7 +33,7 @@ USER nonroot
 CMD ./cmd.sh
 
 FROM intermediate1 as test
+RUN pip install --no-cache-dir -r requirements_test.txt
 RUN adduser nonroot --disabled-password
 USER nonroot
-RUN pip install --no-cache-dir -r requirements_test.txt
 # Now wait for test commands passed with "exec"
