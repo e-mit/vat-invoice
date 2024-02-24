@@ -72,6 +72,10 @@ function clearErrors() {
     for (let i = 0; i < elements.length; i++) {
         elements[i].remove()
     }
+    let cells = Array.from(document.getElementsByClassName("error-cell"));
+    for (let i = 0; i < cells.length; i++) {
+        cells[i].classList.remove("error-cell");
+    }
 }
 
 function submitForm() {
