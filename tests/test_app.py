@@ -1,4 +1,5 @@
 """Tests for app.py. Note: run with pytest --log-cli-level=DEBUG."""
+from datetime import datetime, timezone, timedelta
 from flask.testing import FlaskClient
 from app import app
 import pytest
@@ -31,7 +32,9 @@ def test_get_version(client) -> None:
     data = response.get_json()
     assert data["version"] == config.VERSION
     assert data["commit_hash"] == config.COMMIT_HASH
-    assert "timestamp_now" in data
+    time_diff = abs(datetime.fromisoformat(data["timestamp_now"])
+                    - datetime.now(tz=timezone.utc))
+    assert time_diff < timedelta(seconds=2)
 
 
 def test_get_version_slash(client) -> None:
