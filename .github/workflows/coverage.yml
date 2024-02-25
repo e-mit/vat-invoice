@@ -25,12 +25,19 @@ jobs:
         target_coverage_pc=90
         coverage_pc=$(docker exec test python -m pytest --cov=. tests -p no:cacheprovider | awk '$1 == "TOTAL" {print $NF+0}')
         echo Test coverage = $coverage_pc%
-        if [ $coverage_pc -gt $target_coverage_pc ]; then result="success"; else result="failure"; fi
-        curl -X POST \
+        if [ $coverage_pc -gt $target_coverage_pc ]
+        then
+          color="34D058"
+        else
+          color="red"
+        fi
+        curl -L \
+          -X PATCH \
           -H "Accept: application/vnd.github+json" \
-          -H "Authorization: token ${{ secrets.GH_PAT }}" \
-          https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-          -d '{"state":"$result", "description":"$coverage_pc%", "context":"coverage_report"}'
+          -H "Authorization: Bearer ${{ secrets.GIST_TOKEN }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/gists/9df92671b4e2859b1e75cf762121b73f \
+          -d '{"files": {"${{ github.event.repository.name }}.json": {"content": "{\"schemaVersion\": 1, \"label\":\"coverage\", \"message\":\"'$coverage_pc'%\", \"color\":\"'$color'\", \"namedLogo\":\"github\", \"labelColor\":\"444D56\"}"}}}'
         exit $(( coverage_pc < target_coverage_pc ))
     - name: Save result
       if: always()

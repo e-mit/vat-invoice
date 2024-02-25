@@ -2,8 +2,7 @@
 
 ![docker test build](https://github.com/e-mit/vat-invoice/actions/workflows/docker-test-build.yml/badge.svg)
 ![tests](https://github.com/e-mit/vat-invoice/actions/workflows/tests.yml/badge.svg)
-![coverage](https://github.com/e-mit/vat-invoice/actions/workflows/coverage.yml/badge.svg)
-![coverage%](https://coverage-badge.samuelcolvin.workers.dev/e-mit/vat-invoice.svg)
+![coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/e-mit/9df92671b4e2859b1e75cf762121b73f/raw/vat-invoice.json)
 ![flake8](https://github.com/e-mit/vat-invoice/actions/workflows/flake8.yml/badge.svg)
 ![mypy](https://github.com/e-mit/vat-invoice/actions/workflows/mypy.yml/badge.svg)
 ![pycodestyle](https://github.com/e-mit/vat-invoice/actions/workflows/pycodestyle.yml/badge.svg)
