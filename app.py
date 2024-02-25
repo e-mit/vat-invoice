@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from flask import Flask, render_template, request
 from flask import jsonify, Response, abort
 from werkzeug.exceptions import HTTPException
+from weasyprint import HTML
 
 from invoice_form import InvoiceForm
 from demo_values import demo_values
@@ -42,7 +43,7 @@ def index_get(form=None) -> str:
 
 
 @app.post("/")
-def index_post() -> str | tuple[str, int]:
+def index_post() -> str | tuple[str, int] | Response:
     """POST for form data to be returned from main page."""
     try:
         app.logger.debug("Request form in index_post(): %s", request.form)
@@ -50,7 +51,9 @@ def index_post() -> str | tuple[str, int]:
         if form.validate():
             invoice = Invoice(form.data, "invoice.html")
             invoice.calculate_invoice()
-            return invoice.render(OPEN_PRINT_DIALOG)
+            pdf_byte_string = HTML(string=invoice.render(False)).write_pdf()
+            return Response(pdf_byte_string,
+                            headers={'Content-Type': 'application/pdf'})
         if form.csrf_token.errors:  # type: ignore
             app.logger.warning('CSRF token error')
             return (render_template("error.html", title="CSRF error"),
