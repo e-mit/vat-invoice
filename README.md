@@ -19,14 +19,14 @@ A Python web application for creating VAT invoices.
 
 This project uses Flask, WTForms and Docker. PDFs are generated with Weasyprint.
 
-[Try the example deployment on Google Cloud Run.](https://vat-invoice-service-uzzizxhvgq-ew.a.run.app/)
+[Try the example deployment on Google Cloud Run.](https://vat-invoice-service-uzzizxhvgq-ew.a.run.app/) Note that this is a free GCR instance which scales to zero, causing a brief startup delay. 
 
 [Docker Hub image repository](https://hub.docker.com/r/emit5/vat-invoice)
 
 ### Readme Contents
 
 - **[Development and testing](#development-and-testing)**<br>
-- **[Deployment](#continuous-deployment)**<br>
+- **[Continuous deployment](#continuous-deployment)**<br>
 - **[License](#license)**<br>
 
 
@@ -42,9 +42,9 @@ During local development:
 
 ## Continuous deployment
 
-If all workflows on the test image have passed, and if the commit was tagged with a version, the new release image is pushed to Docker Hub and deployed to Google Cloud Run as a new revision.
+If all GitHub action test/lint workflows pass, and if the commit was tagged with a version, the new release image is automatically pushed to Docker Hub and deployed to Google Cloud Run as a new revision.
 
-The release image on Docker Hub is tagged with the commit hash. The ```/version``` route serves a json string giving the version tag and the commit hash.
+The release image on Docker Hub is tagged with the commit hash. The app's ```/version``` HTTP route serves a json string giving the version tag and the commit hash.
 
 ## License
 
