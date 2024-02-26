@@ -17,7 +17,9 @@
 
 A Python web application for creating VAT invoices.
 
-This project uses Flask, WTForms and Docker. [Try the example deployment on Google Cloud Run.](https://vat-invoice-service-uzzizxhvgq-ew.a.run.app/)
+This project uses Flask, WTForms and Docker. PDFs are generated with Weasyprint.
+
+[Try the example deployment on Google Cloud Run.](https://vat-invoice-service-uzzizxhvgq-ew.a.run.app/)
 
 [Docker Hub image repository](https://hub.docker.com/r/emit5/vat-invoice)
 
