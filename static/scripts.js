@@ -78,13 +78,37 @@ function clearErrors() {
     }
 }
 
+function isFormValid() {
+    if (document.getElementById("invoice-form").checkValidity()) {
+        return true;
+    }
+    // Do this to reveal invalid input:
+    document.getElementById("form-submit").click();
+    return false;
+}
+
 function submitForm() {
     clearErrors();
-    let form = document.getElementById("invoice-form")
-    if (form.checkValidity()) {
-        form.submit();
+    if (isFormValid()) {
+        postForm();
     }
-    else {
-        document.getElementById("form-submit").click();
+}
+
+async function postForm() {
+    const formData = new FormData(document.getElementById("invoice-form"));
+    try {
+        const response = await fetch('/', {method: "POST", body: formData});
+        const blob = await response.blob();
+        if (response.headers.get('Content-Type') == "application/pdf") {
+            window.open(URL.createObjectURL(blob), '_blank');
+        }
+        else {
+            document.open();
+            document.write(await blob.text());
+            document.close();
+        }
+    }
+    catch (e) {
+        formError(e.message);
     }
 }
