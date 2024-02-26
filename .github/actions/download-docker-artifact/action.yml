@@ -25,7 +25,10 @@ runs:
     run: |
       docker load < test_image.tar
       PORT=8000
-      docker run -td -p 8080:${PORT} --name test -e FLASK_LOG_LEVEL=DEBUG -e PORT=${PORT} -e COVERAGE_FILE=/home/nonroot/.cov --rm test:latest
+      docker run -td -p 8080:${PORT} --name test \
+        -e FLASK_LOG_LEVEL=DEBUG -e PORT=${PORT} \
+        -e COVERAGE_FILE=/home/nonroot/.cov \
+        -e MYPYPATH=/app/tests/stubs --rm test:latest
   - name: Docker release load
     if: ${{ inputs.build-type == 'release' }}
     shell: bash
