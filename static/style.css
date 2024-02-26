@@ -108,3 +108,7 @@ form textarea, form input {
   color: red;
   font-weight: bold;
 }
+
+#form-submit {
+  display: none;
+}
