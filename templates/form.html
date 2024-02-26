@@ -17,6 +17,8 @@
     </ol>
   </details>
 
+  {% set ns = namespace(form_errors=false) %}
+
   <form action="" method="post" id="invoice-form" onreset="removeAllAddedRows()"
   {% if open_in_new_tab %}target="_blank"{% endif %}>
     {{ form.csrf_token }}
@@ -25,6 +27,7 @@
       {{ field.label }} {{ field(class="clearable") }}
       {% for error in field.errors %}
         <div class="error error-string">{{ error | e }}</div>
+        {% set ns.form_errors = true %}
       {% endfor %}
     {% endfor %}
 
@@ -52,6 +55,7 @@
     {% for field in item %}
       {% for error in field.errors %}
         <div class="table-error error-string">{{ error | e }}</div>
+        {% set ns.form_errors = true %}
       {% endfor %}
     {% endfor %}
   {% endfor %}
@@ -65,8 +69,11 @@
     <button onClick="window.location.href=window.location.href">Use demo values</button>
     <button type="button" onclick="clearForm()">Clear form</button>
     <button type="button" onclick="submitForm()">Generate PDF</button>
-    <input id="form-submit" type="submit" value="Generate" form="invoice-form">
+    <input id="form-submit" type="submit" form="invoice-form">
     <div class="error" id="error-message"></div>
+    {% if ns.form_errors %}
+      <div class="error error-string">Please correct the form error(s).</div>
+    {% endif %}
   </div>
 
 {% endblock content %}
