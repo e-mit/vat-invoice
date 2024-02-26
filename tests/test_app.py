@@ -1,9 +1,11 @@
 """Tests for app.py. Note: run with pytest --log-cli-level=DEBUG."""
 
 from datetime import datetime, timezone, timedelta
+import io
 
 from flask.testing import FlaskClient
 import pytest
+from pypdf import PdfReader
 
 from app import app
 import app as flask_app
@@ -13,6 +15,13 @@ from test_invoice_form import dict_to_MultiDict, get_csrf_token
 
 HTTP_SUCCESS = 200
 HOME_LINK = '<a href="/">Home</a>'
+
+
+def extract_pdf_as_text(pdf_data: bytes) -> str:
+    fulltext = ""
+    for page in PdfReader(io.BytesIO(pdf_data)).pages:
+        fulltext += '\n' + page.extract_text(extraction_mode="layout")
+    return fulltext
 
 
 @pytest.fixture
@@ -66,9 +75,22 @@ def test_post_index_demo_form(client) -> None:
         md.add('csrf_token', get_csrf_token(response.text))
         response = client.post("/", data=md)
         assert response.status_code == HTTP_SUCCESS
-        assert "<strong>INVOICE</strong>" in response.text
+        assert response.data[0:4] == b"%PDF"
+
+
+def test_pdf_content(client) -> None:
+    with client:
+        response = client.get("/")
+        assert response.status_code == HTTP_SUCCESS
+        md = dict_to_MultiDict(demo_values)
+        md.add('csrf_token', get_csrf_token(response.text))
+        response = client.post("/", data=md)
+        assert response.status_code == HTTP_SUCCESS
+        fulltext = extract_pdf_as_text(response.data)
+        assert (f"Invoice Number: {demo_values['info']['invoice_number']}"
+                in fulltext)
         assert (f"VAT number: {demo_values['info']['seller_vat_number']}"
-                in response.text)
+                in fulltext)
 
 
 def test_post_index_csrf_error(client) -> None:
@@ -93,7 +115,7 @@ def test_post_index_form_error(client) -> None:
         md.pop('info-vat_percent')
         response = client.post("/", data=md)
         assert response.status_code == HTTP_SUCCESS
-        assert "<strong>INVOICE</strong>" not in response.text
+        assert "<!DOCTYPE html>" in response.text
         assert flask_app.APP_TITLE in response.text
 
 
