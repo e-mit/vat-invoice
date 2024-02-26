@@ -80,5 +80,11 @@ function clearErrors() {
 
 function submitForm() {
     clearErrors();
-    document.getElementById("invoice-form").submit();
+    let form = document.getElementById("invoice-form")
+    if (form.checkValidity()) {
+        form.submit();
+    }
+    else {
+        document.getElementById("form-submit").click();
+    }
 }
