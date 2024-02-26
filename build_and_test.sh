@@ -1,9 +1,14 @@
 #!/bin/sh
 
+PORT=8000
+
 docker build --target test -t test:latest .
 
 # The -td forces the container to keep running without any CMD, and as a daemon
-PORT=8000 && docker run -td -p 8080:${PORT} --name test -e FLASK_LOG_LEVEL=DEBUG -e PORT=${PORT} -e COVERAGE_FILE=/home/nonroot/.cov --rm test:latest
+docker run -td -p 8080:${PORT} --name test \
+  -e FLASK_LOG_LEVEL=DEBUG -e PORT=${PORT} \
+  -e COVERAGE_FILE=/home/nonroot/.cov \
+  -e MYPYPATH=/app/tests/stubs --rm test:latest
 
 docker exec test python -m pytest -p no:cacheprovider
 docker exec test python -m bandit -r . --exclude=/tests/,/venv/
