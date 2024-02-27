@@ -15,14 +15,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Wait for docker image artifact
-      run: |
-        export GITHUB_SHA=${{ github.sha }}
-        export REPO_PATH=${{ github.repository }}
-        export GH_TOKEN=${{ secrets.GH_PAT }}
-        pip install -r requirements_test.txt
-        python .github/wait_for_workflow_artifacts.py - release-build-${{ github.sha }}
-    - name: Download docker image artifact
+    - name: Wait for and download docker image artifact
       uses: ./.github/actions/download-docker-artifact
       with:
           repo-read-token: ${{ secrets.GH_PAT }}
