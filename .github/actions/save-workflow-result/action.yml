@@ -4,7 +4,7 @@ description: "Save a string which indicates whether the workflow passed."
 inputs:
    result:
      required: true
-     description: "The result (0 = success, 1 = fail)"
+     description: "job.status of the calling workflow (str = success, failure, cancelled)"
 
 runs:
   using: "composite"
