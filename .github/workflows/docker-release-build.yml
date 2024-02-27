@@ -25,7 +25,7 @@ jobs:
         if-no-files-found: error
         retention-days: 1
     - name: Pause due to GitHub problem with artifact upload/download
-      run: sleep 5
+      run: sleep 30
     - name: Save result
       if: always()
       uses: ./.github/actions/save-workflow-result
