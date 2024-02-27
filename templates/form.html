@@ -26,7 +26,7 @@
     {% for field in form.info %}
       {{ field.label }} {{ field(class="clearable") }}
       {% for error in field.errors %}
-        <div class="error error-string">{{ error | e }}</div>
+        <div class="error error-removable">{{ error | e }}</div>
         {% set ns.form_errors = true %}
       {% endfor %}
     {% endfor %}
@@ -54,7 +54,7 @@
   {% for item in form.items %}
     {% for field in item %}
       {% for error in field.errors %}
-        <div class="table-error error-string">{{ error | e }}</div>
+        <div class="table-error error-removable">{{ error | e }}</div>
         {% set ns.form_errors = true %}
       {% endfor %}
     {% endfor %}
@@ -72,7 +72,7 @@
     <input id="form-submit" type="submit" form="invoice-form">
     <div class="error" id="error-message"></div>
     {% if ns.form_errors %}
-      <div class="error error-string">Please correct the form error(s).</div>
+      <div class="error error-removable">Please correct/complete the form data and retry.</div>
     {% endif %}
   </div>
 

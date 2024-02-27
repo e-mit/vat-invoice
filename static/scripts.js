@@ -68,7 +68,7 @@ function clearForm() {
 }
 
 function clearErrors() {
-    let elements = Array.from(document.getElementsByClassName("error-string"));
+    let elements = Array.from(document.getElementsByClassName("error-removable"));
     for (let i = 0; i < elements.length; i++) {
         elements[i].remove()
     }
