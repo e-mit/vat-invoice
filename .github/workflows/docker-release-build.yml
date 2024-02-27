@@ -13,6 +13,7 @@ jobs:
         config_file=config.py
         echo '"""Versioning for app."""' > $config_file
         git_tag=$(git tag --points-at HEAD)
+        echo Saving to config file: VERSION = \"$git_tag\", COMMIT_HASH = \"${{ github.sha }}\"
         echo VERSION = \"$git_tag\" >> $config_file
         echo COMMIT_HASH = \"${{ github.sha }}\" >> $config_file
         docker build --target release -t release:latest .
