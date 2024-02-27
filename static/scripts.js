@@ -67,7 +67,12 @@ function clearForm() {
     removeAllAddedRows();
 }
 
+function errorPrompt(show) {
+    document.getElementById("error-prompt").style.display = show ? 'block' : 'none';
+}
+
 function clearErrors() {
+    errorPrompt(false);
     let elements = Array.from(document.getElementsByClassName("error-removable"));
     for (let i = 0; i < elements.length; i++) {
         elements[i].remove()
@@ -78,23 +83,27 @@ function clearErrors() {
     }
 }
 
-function isFormValid() {
+function isFormValidClientSide() {
+    // Call the client-side HTML form validation.
     if (document.getElementById("invoice-form").checkValidity()) {
         return true;
     }
-    // Do this to reveal invalid input:
+    // Do this to reveal invalid input (browser-dependent)
     document.getElementById("form-submit").click();
+    errorPrompt(true);
     return false;
 }
 
 function submitForm() {
     clearErrors();
-    if (isFormValid()) {
+    if (isFormValidClientSide()) {
         postForm();
     }
 }
 
 async function postForm() {
+    // Send form data to the server for further validation and processing.
+    // Display the returned PDF (if form valid), else a webpage.
     const formData = new FormData(document.getElementById("invoice-form"));
     try {
         const response = await fetch('/', {method: "POST", body: formData});

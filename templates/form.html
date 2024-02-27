@@ -71,9 +71,9 @@
     <button type="button" onclick="submitForm()">Generate PDF</button>
     <input id="form-submit" type="submit" form="invoice-form">
     <div class="error" id="error-message"></div>
-    {% if ns.form_errors %}
-      <div class="error error-removable">Please correct/complete the form data and retry.</div>
-    {% endif %}
+    <div class="error" id="error-prompt" {% if not ns.form_errors %}style="display: none;"{% endif %}>
+    Please correct/complete the form data and retry.
+    </div>
   </div>
 
 {% endblock content %}
