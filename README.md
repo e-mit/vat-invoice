@@ -33,7 +33,7 @@ This project uses Flask, WTForms and Docker. PDFs are generated with Weasyprint.
 
 ## Development and testing
 
-The Dockerfile has two targets: test and release. The release target avoids the inclusion of test files/packages in its hidden layers.
+The Dockerfile has two targets: test and release. The release target excludes test files/packages.
 
 Tests and linting checks run via GitHub actions, in the test container, after each push.
 
