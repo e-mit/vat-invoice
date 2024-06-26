@@ -22,8 +22,6 @@ This project uses Flask, WTForms and Docker. PDFs are generated with Weasyprint.
 [Try the example deployment on Google Cloud Run.](https://vat-invoice-service-uzzizxhvgq-ew.a.run.app/)
 (Note: this is a free GCR instance which scales to zero, causing a brief startup delay).
 
-It is also hosted on AWS EC2 at [https://vat.e-mit.dev](https://vat.e-mit.dev).
-
 [Docker Hub image repository](https://hub.docker.com/r/emit5/vat-invoice)
 
 ### Readme Contents
