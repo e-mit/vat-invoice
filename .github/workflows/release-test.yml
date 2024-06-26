@@ -21,12 +21,7 @@ jobs:
     - name: Release test
       run: |
         PORT=8000
-        FLASK_SECRET_KEY=$(openssl rand -base64 32)
-        CSRF_SECRET=$(openssl rand -base64 32)
-        docker run -d -p 8080:${PORT} --name release -e PORT=${PORT} \
-        -e FLASK_SECRET_KEY=${FLASK_SECRET_KEY} \
-        -e CSRF_SECRET=${CSRF_SECRET} \
-        --rm release:latest
+        docker run -d -p 8080:${PORT} --name release -e PORT=${PORT} --rm release:latest
         sleep 4
         page=$(curl http://127.0.0.1:8080)
         if ! grep -q "VAT invoice generator" <<< "$page"; then echo "Page GET failed." && exit 1; fi
