@@ -1,12 +1,16 @@
 #!/bin/sh
 
 PORT=8000
+FLASK_SECRET_KEY=$(openssl rand -base64 32)
+CSRF_SECRET=$(openssl rand -base64 32)
 
 docker build --target test -t test:latest .
 
 # The -td forces the container to keep running without any CMD, and as a daemon
 docker run -td -p 8080:${PORT} --name test \
   -e FLASK_LOG_LEVEL=DEBUG -e PORT=${PORT} \
+  -e FLASK_SECRET_KEY=${FLASK_SECRET_KEY} \
+  -e CSRF_SECRET=${CSRF_SECRET} \
   -e COVERAGE_FILE=/home/nonroot/.cov \
   -e MYPYPATH=/app/tests/stubs --rm test:latest
 

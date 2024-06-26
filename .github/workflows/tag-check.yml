@@ -25,7 +25,12 @@ jobs:
         GH_TOKEN: ${{ secrets.GH_PAT }}
       run: |
         PORT=8000
-        docker run -d -p 8080:${PORT} --name release -e PORT=${PORT} --rm release:latest
+        FLASK_SECRET_KEY=$(openssl rand -base64 32)
+        CSRF_SECRET=$(openssl rand -base64 32)
+        docker run -d -p 8080:${PORT} --name release -e PORT=${PORT} \
+        -e FLASK_SECRET_KEY=${FLASK_SECRET_KEY} \
+        -e CSRF_SECRET=${CSRF_SECRET} \
+        --rm release:latest
         sleep 4
         json_data=$(curl http://127.0.0.1:8080/version)
         git_tag=$(echo $json_data | python3 -c "import sys, json; print(json.load(sys.stdin)['version'])")
