@@ -41,7 +41,8 @@ def index_get(form=None) -> Response:
         render_template("form.html", form=form,
                         title=APP_TITLE,
                         open_in_new_tab=OPEN_IN_NEW_TAB))
-    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Cache-Control'] = ('no-store, no-cache, '
+                                         'must-revalidate, max-age=0')
     response.headers['Expires'] = '0'
     return response
 
@@ -69,8 +70,9 @@ def index_post() -> str | tuple[str, int] | Response:
         elif form.errors:
             app.logger.debug('Form field errors in: %s', form.data)
             return index_get(form)
-    except Exception:  # pylint: disable=broad-except
+    except Exception as e:  # pylint: disable=broad-except
         app.logger.error('Exception while handling form: %s', request.form)
+        app.logger.exception(e)
     abort(HTTP_INTERNAL_SERVER_ERROR)
 
 
