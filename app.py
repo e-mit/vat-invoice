@@ -4,7 +4,7 @@ import secrets
 import os
 from datetime import datetime, timezone
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 from flask import jsonify, Response, abort
 from werkzeug.exceptions import HTTPException
 from weasyprint import HTML
@@ -32,14 +32,18 @@ OPEN_IN_NEW_TAB = not app.config['DEBUG']
 
 
 @app.get("/")
-def index_get(form=None) -> str:
+def index_get(form=None) -> Response:
     """GET the main page which contains the form for input."""
     if not form:
         form = InvoiceForm(None, **demo_values)
     app.logger.debug("Form data in index_get(): %s", form.data)
-    return render_template("form.html", form=form,
-                           title=APP_TITLE,
-                           open_in_new_tab=OPEN_IN_NEW_TAB)
+    response = make_response(
+        render_template("form.html", form=form,
+                        title=APP_TITLE,
+                        open_in_new_tab=OPEN_IN_NEW_TAB))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Expires'] = '0'
+    return response
 
 
 @app.post("/")
